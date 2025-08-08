@@ -38,7 +38,8 @@ const DigitalCardProfile = sequelize.define('digital_card_profiles', {
   additionalNotes: DataTypes.TEXT,
   applicationDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
   status: { type: DataTypes.ENUM('pending', 'approved', 'rejected'), defaultValue: 'pending' },
-
+  imagePath: { type: DataTypes.STRING, allowNull: true },
+  documentPath: { type: DataTypes.STRING, allowNull: true },
   
   paymentStatus: {
     type: DataTypes.STRING,

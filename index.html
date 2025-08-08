@@ -843,72 +843,156 @@
     <div id="toast-container"></div>
 
     <script>
-     // Global variables for plan selection and file uploads
+    // Global variables for plan selection and file uploads
 let selectedPlan = null;
 let selectedPrice = null;
+let packPrices = { basic: 699, standard: 1499, premium: 0 }; // Fallback prices
 let uploadedFiles = {
     logo: null,
-    profile: [],
-    portfolio: [],
     documents: []
 };
 
-// Plan selection functions
+// FIXED: Load pack prices with better error handling
+async function loadPackPrices() {
+    try {
+        console.log('Fetching pack prices from:', 'http://localhost:4000/api/applications/packs');
+        
+        const response = await fetch('http://localhost:4000/api/applications/packs', {
+            method: 'GET',
+            headers: { 
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            console.error('Non-JSON response:', text.substring(0, 200));
+            throw new Error('Server returned HTML instead of JSON - check your API endpoint');
+        }
+        
+        const data = await response.json();
+        console.log('Received pack data:', data);
+
+        if (data.success && data.pack_price) {
+            packPrices = data.pack_price;
+            console.log('Updated pack prices:', packPrices);
+            
+            // Update price display
+            updatePriceDisplay();
+            updateButtonHandlers();
+        } else {
+            console.warn('pack_price not found in response, using fallback prices');
+        }
+    } catch (error) {
+        console.error('Failed to fetch pack prices:', error);
+        console.log('Using fallback prices:', packPrices);
+        
+        // Still update the UI with fallback prices
+        updatePriceDisplay();
+        updateButtonHandlers();
+    }
+}
+
+// Update price display in UI
+function updatePriceDisplay() {
+    const starterPrice = document.getElementById('starter-price');
+    const entrepreneurPrice = document.getElementById('entrepreneur-price');
+    const enterprisePrice = document.getElementById('enterprise-price');
+    
+    if (starterPrice) starterPrice.innerText = `₹${packPrices.basic}`;
+    if (entrepreneurPrice) entrepreneurPrice.innerText = `₹${packPrices.standard}`;
+    if (enterprisePrice && packPrices.premium !== 0) {
+        enterprisePrice.innerText = `₹${packPrices.premium}`;
+    }
+}
+
+// Update button onclick handlers with correct prices
+function updateButtonHandlers() {
+    const starterBtn = document.querySelector('a[href="#apply"]:contains("Starter")') || 
+                     document.querySelector('[onclick*="Starter"]');
+    const entrepreneurBtn = document.querySelector('a[href="#apply"]:contains("Entrepreneur")') || 
+                          document.querySelector('[onclick*="Entrepreneur"]');
+    
+    if (starterBtn) {
+        starterBtn.setAttribute('onclick', `selectPlanAndScrollToForm('Starter Pack', ${packPrices.basic}); return false;`);
+    }
+    if (entrepreneurBtn) {
+        entrepreneurBtn.setAttribute('onclick', `selectPlanAndScrollToForm('Entrepreneur Plan', ${packPrices.standard}); return false;`);
+    }
+}
+
+// Plan selection with proper price handling
 function selectPlanAndScrollToForm(planName, price) {
     selectedPlan = planName;
     selectedPrice = price;
     
+    console.log('Selected plan:', planName, 'Price:', price);
+    
     // Update the plan info display
-    document.getElementById('selected-plan-name').textContent = planName;
-    document.getElementById('selected-plan-price').textContent = `₹${price}`;
-    document.getElementById('selected-plan-info').classList.remove('hidden');
+    const planNameEl = document.getElementById('selected-plan-name');
+    const planPriceEl = document.getElementById('selected-plan-price');
+    const planInfoEl = document.getElementById('selected-plan-info');
     
-    // Store the selected plan data in hidden inputs for form submission
-    let planInput = document.getElementById('hidden-selected-plan');
-    let priceInput = document.getElementById('hidden-selected-price');
+    if (planNameEl) planNameEl.textContent = planName;
+    if (planPriceEl) planPriceEl.textContent = `₹${price}`;
+    if (planInfoEl) planInfoEl.classList.remove('hidden');
     
-    // Create hidden inputs if they don't exist
-    if (!planInput) {
-        planInput = document.createElement('input');
-        planInput.type = 'hidden';
-        planInput.id = 'hidden-selected-plan';
-        planInput.name = 'selectedPlan';
-        document.getElementById('application-form').appendChild(planInput);
-    }
-    
-    if (!priceInput) {
-        priceInput = document.createElement('input');
-        priceInput.type = 'hidden';
-        priceInput.id = 'hidden-selected-price';
-        priceInput.name = 'selectedPrice';
-        document.getElementById('application-form').appendChild(priceInput);
-    }
-    
-    // Update the hidden inputs with selected values
-    planInput.value = planName;
-    priceInput.value = price;
-    
-    console.log(`Plan selected: ${planName} - ₹${price}`); // Debug log
+    // Add hidden inputs for form submission
+    updateHiddenPlanInputs(planName, price);
     
     // Scroll to form
     scrollToForm();
 }
 
+// Add hidden inputs to ensure plan data is submitted
+function updateHiddenPlanInputs(planName, price) {
+    const form = document.getElementById('application-form');
+    if (!form) return;
+    
+    // Remove existing hidden inputs
+    const existingInputs = form.querySelectorAll('input[name^="selected"]');
+    existingInputs.forEach(input => input.remove());
+    
+    // Add new hidden inputs
+    const planInput = document.createElement('input');
+    planInput.type = 'hidden';
+    planInput.name = 'selectedPlan';
+    planInput.value = planName;
+    form.appendChild(planInput);
+    
+    const priceInput = document.createElement('input');
+    priceInput.type = 'hidden';
+    priceInput.name = 'selectedPrice';
+    priceInput.value = price;
+    form.appendChild(priceInput);
+}
+
 function clearSelectedPlan() {
     selectedPlan = null;
     selectedPrice = null;
-    document.getElementById('selected-plan-info').classList.add('hidden');
+    const planInfoEl = document.getElementById('selected-plan-info');
+    if (planInfoEl) planInfoEl.classList.add('hidden');
     
-    // Clear hidden inputs
-    const planInput = document.getElementById('hidden-selected-plan');
-    const priceInput = document.getElementById('hidden-selected-price');
-    
-    if (planInput) planInput.value = '';
-    if (priceInput) priceInput.value = '';
+    // Remove hidden inputs
+    const form = document.getElementById('application-form');
+    if (form) {
+        const existingInputs = form.querySelectorAll('input[name^="selected"]');
+        existingInputs.forEach(input => input.remove());
+    }
 }
 
 function scrollToForm() {
-    document.getElementById('apply').scrollIntoView({ behavior: 'smooth' });
+    const formEl = document.getElementById('apply');
+    if (formEl) {
+        formEl.scrollIntoView({ behavior: 'smooth' });
+    }
 }
 
 // Color picker synchronization
@@ -965,20 +1049,25 @@ function initializeCTAHandling() {
     }
 }
 
-// File upload functions
+// FIXED: File upload functions with proper handling
 function handleLogoUpload(input) {
     const file = input.files[0];
     if (file && validateImage(file)) {
         uploadedFiles.logo = file;
         displayImagePreview('logo-preview', [file], 'logo');
+        showToast('Logo uploaded successfully', 'success');
     }
 }
 
 function handleDocumentUpload(input) {
     const files = Array.from(input.files);
-    if (files.length > 0 && files.every(validateDocument)) {
-        uploadedFiles.documents = files;
-        displayDocumentPreview('document-list', files);
+    if (files.length > 0) {
+        const validFiles = files.filter(file => validateDocument(file));
+        if (validFiles.length > 0) {
+            uploadedFiles.documents = [...uploadedFiles.documents, ...validFiles];
+            displayDocumentPreview('document-list', uploadedFiles.documents);
+            showToast(`${validFiles.length} document(s) uploaded successfully`, 'success');
+        }
     }
 }
 
@@ -1000,7 +1089,14 @@ function validateImage(file) {
 }
 
 function validateDocument(file) {
-    const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/png'];
+    const validTypes = [
+        'application/pdf', 
+        'application/msword', 
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+        'image/jpeg', 
+        'image/png',
+        'image/jpg'
+    ];
     const maxSize = 10 * 1024 * 1024; // 10MB
 
     if (!validTypes.includes(file.type)) {
@@ -1075,15 +1171,14 @@ function removeImage(type, index) {
         const logoInput = document.getElementById('logo-input');
         if (logoPreview) logoPreview.innerHTML = '';
         if (logoInput) logoInput.value = '';
-    } else {
-        uploadedFiles[type].splice(index, 1);
-        displayImagePreview(`${type}-preview`, uploadedFiles[type], type);
+        showToast('Logo removed', 'info');
     }
 }
 
 function removeDocument(index) {
     uploadedFiles.documents.splice(index, 1);
     displayDocumentPreview('document-list', uploadedFiles.documents);
+    showToast('Document removed', 'info');
 }
 
 // Drag and drop functionality
@@ -1110,12 +1205,15 @@ function initializeDragAndDrop() {
             const files = Array.from(e.dataTransfer.files);
             const input = area.querySelector('input[type="file"]');
             
-            if (input) {
+            if (input && files.length > 0) {
+                // Create a new DataTransfer object to set files
                 const dt = new DataTransfer();
                 files.forEach(file => dt.items.add(file));
                 input.files = dt.files;
                 
-                input.dispatchEvent(new Event('change'));
+                // Trigger the change event
+                const changeEvent = new Event('change', { bubbles: true });
+                input.dispatchEvent(changeEvent);
             }
         });
     });
@@ -1139,7 +1237,7 @@ function showToast(message, type = 'info') {
     }, 3000);
 }
 
-// Updated Payment handling function
+// Payment handling function
 async function handlePayment(applicationId, fullName, email, phone) {
     try {
         showToast('Creating payment order...', 'info');
@@ -1196,24 +1294,26 @@ async function handlePayment(applicationId, fullName, email, phone) {
                         showToast('Payment successful!', 'success');
                         
                         const form = document.getElementById('application-form');
-                        form.innerHTML = `
-                            <div class="text-center py-8">
-                                <svg class="mx-auto h-16 w-16 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                <h3 class="text-2xl font-bold mt-4 mb-2 text-green-600">Payment Successful!</h3>
-                                <p class="text-gray-600 mb-4">Thank you for your order. We will contact you soon to proceed with your NFC card creation.</p>
-                                <div class="bg-gray-50 p-4 rounded-lg mb-6">
-                                    <p class="text-sm text-gray-600">
-                                        <strong>Order ID:</strong> ${response.razorpay_order_id}<br>
-                                        <strong>Payment ID:</strong> ${response.razorpay_payment_id}
-                                    </p>
+                        if (form) {
+                            form.innerHTML = `
+                                <div class="text-center py-8">
+                                    <svg class="mx-auto h-16 w-16 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <h3 class="text-2xl font-bold mt-4 mb-2 text-green-600">Payment Successful!</h3>
+                                    <p class="text-gray-600 mb-4">Thank you for your order. We will contact you soon to proceed with your NFC card creation.</p>
+                                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                                        <p class="text-sm text-gray-600">
+                                            <strong>Order ID:</strong> ${response.razorpay_order_id}<br>
+                                            <strong>Payment ID:</strong> ${response.razorpay_payment_id}
+                                        </p>
+                                    </div>
+                                    <button type="button" class="btn-primary px-6 py-3 rounded-lg text-white font-semibold" onclick="location.reload()">
+                                        Place Another Order
+                                    </button>
                                 </div>
-                                <button type="button" class="btn-primary px-6 py-3 rounded-lg text-white font-semibold" onclick="location.reload()">
-                                    Place Another Order
-                                </button>
-                            </div>
-                        `;
+                            `;
+                        }
                     } else {
                         showToast('Payment verification failed! Please contact support.', 'error');
                         resetSubmitButton();
@@ -1253,6 +1353,7 @@ async function handlePayment(applicationId, fullName, email, phone) {
     }
 }
 
+// Helper function to reset submit button
 function resetSubmitButton() {
     const submitBtn = document.getElementById('submit-button');
     if (submitBtn) {
@@ -1261,7 +1362,7 @@ function resetSubmitButton() {
     }
 }
 
-// FIXED Form submission function
+// FIXED: Form submission with proper file upload handling
 function initializeFormSubmission() {
     const form = document.getElementById('application-form');
     const submitBtn = document.getElementById('submit-button');
@@ -1270,27 +1371,39 @@ function initializeFormSubmission() {
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        // Get selected plan and price from global variables or hidden inputs
-        let currentSelectedPlan = selectedPlan;
-        let currentSelectedPrice = selectedPrice;
+        // Get plan and price from hidden inputs or selected values
+        const planInput = document.querySelector('input[name="selectedPlan"]');
+        const priceInput = document.querySelector('input[name="selectedPrice"]');
         
-        // Fallback to hidden inputs if global variables are not set
-        if (!currentSelectedPlan) {
-            const planInput = document.getElementById('hidden-selected-plan');
-            const priceInput = document.getElementById('hidden-selected-price');
-            
-            currentSelectedPlan = planInput ? planInput.value : null;
-            currentSelectedPrice = priceInput ? parseFloat(priceInput.value) : null;
-        }
+        const currentSelectedPlan = planInput?.value || selectedPlan || 'Starter Pack';
+        const currentSelectedPrice = priceInput?.value || selectedPrice;
 
-        // Validate plan selection
-        if (!currentSelectedPlan || !currentSelectedPrice) {
+        // Validate plan selection with proper price mapping
+        if (!currentSelectedPlan) {
             showToast('Please select a plan before submitting', 'error');
-            document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+            const pricingSection = document.getElementById('pricing');
+            if (pricingSection) {
+                pricingSection.scrollIntoView({ behavior: 'smooth' });
+            }
             return;
         }
 
-        console.log(`Submitting with plan: ${currentSelectedPlan} - ₹${currentSelectedPrice}`); // Debug log
+        // Ensure price is correctly mapped
+        let finalPrice = currentSelectedPrice;
+        if (!finalPrice) {
+            if (currentSelectedPlan.includes('Starter')) {
+                finalPrice = packPrices.basic || 699;
+            } else if (currentSelectedPlan.includes('Entrepreneur')) {
+                finalPrice = packPrices.standard || 1499;
+            } else if (currentSelectedPlan.includes('Enterprise')) {
+                finalPrice = packPrices.premium || 0;
+            }
+        }
+
+        console.log('Final submission data:', {
+            selectedPlan: currentSelectedPlan,
+            selectedPrice: finalPrice
+        });
 
         // Validate required fields
         const requiredFields = document.querySelectorAll('[required]');
@@ -1328,67 +1441,84 @@ function initializeFormSubmission() {
             </svg> Submitting...
         `;
 
-        // Build form data with correct plan and price
-        const formData = {
-            selectedPlan: currentSelectedPlan,
-            price: currentSelectedPrice,
+        // FIXED: Create FormData to handle file uploads properly
+        const formData = new FormData();
 
-            fullName: document.getElementById('full-name').value.trim(),
-            businessName: document.getElementById('business-name').value.trim(),
-            jobTitle: document.getElementById('job-title')?.value.trim() || '',
-            tagline: document.getElementById('tagline')?.value.trim() || '',
-            bio: document.getElementById('bio')?.value.trim() || '',
-            address: document.getElementById('address')?.value.trim() || '',
-            email: document.getElementById('email').value.trim().toLowerCase(),
-            phone: document.getElementById('phone').value.trim(),
-            whatsappEnabled: document.getElementById('whatsapp-enabled')?.checked,
-            altPhone: document.getElementById('alt-phone')?.value.trim() || '',
-            website: document.getElementById('website')?.value.trim() || '',
-            linkedin: document.getElementById('linkedin')?.value.trim() || '',
-            instagram: document.getElementById('instagram')?.value.trim() || '',
-            facebook: document.getElementById('facebook')?.value.trim() || '',
-            twitter: document.getElementById('twitter')?.value.trim() || '',
-            youtube: document.getElementById('youtube')?.value.trim() || '',
-            otherSocialName: document.getElementById('other-social-name')?.value.trim() || '',
-            otherSocialUrl: document.getElementById('other-social-url')?.value.trim() || '',
+        // Add all form fields
+        formData.append('selectedPlan', currentSelectedPlan);
+        formData.append('selectedPrice', parseFloat(finalPrice));
+        formData.append('fullName', document.getElementById('full-name').value.trim());
+        formData.append('businessName', document.getElementById('business-name').value.trim());
+        formData.append('jobTitle', document.getElementById('job-title')?.value.trim() || '');
+        formData.append('tagline', document.getElementById('tagline')?.value.trim() || '');
+        formData.append('bio', document.getElementById('bio')?.value.trim() || '');
+        formData.append('address', document.getElementById('address')?.value.trim() || '');
+        formData.append('email', document.getElementById('email').value.trim().toLowerCase());
+        formData.append('phone', document.getElementById('phone').value.trim());
+        formData.append('whatsappEnabled', document.getElementById('whatsapp-enabled')?.checked || false);
+        formData.append('altPhone', document.getElementById('alt-phone')?.value.trim() || '');
+        formData.append('website', document.getElementById('website')?.value.trim() || '');
+        formData.append('linkedin', document.getElementById('linkedin')?.value.trim() || '');
+        formData.append('instagram', document.getElementById('instagram')?.value.trim() || '');
+        formData.append('facebook', document.getElementById('facebook')?.value.trim() || '');
+        formData.append('twitter', document.getElementById('twitter')?.value.trim() || '');
+        formData.append('youtube', document.getElementById('youtube')?.value.trim() || '');
+        formData.append('otherSocialName', document.getElementById('other-social-name')?.value.trim() || '');
+        formData.append('otherSocialUrl', document.getElementById('other-social-url')?.value.trim() || '');
+        formData.append('primaryColor', document.getElementById('primary-color-hex')?.value.trim() || '#1e88e5');
+        formData.append('secondaryColor', document.getElementById('secondary-color-hex')?.value.trim() || '#69db7c');
+        formData.append('designPreference', document.getElementById('design-preference')?.value || 'modern');
+        formData.append('industry', document.getElementById('industry')?.value || '');
 
-            primaryColor: document.getElementById('primary-color-hex')?.value.trim() || '#1e88e5',
-            secondaryColor: document.getElementById('secondary-color-hex')?.value.trim() || '#69db7c',
-            designPreference: document.getElementById('design-preference')?.value || 'modern',
-            industry: document.getElementById('industry')?.value || '',
+        // Add section includes as JSON array
+        const sectionsInclude = Array.from(
+            document.querySelectorAll('input[type="checkbox"][id^="section-"]:checked')
+        ).map(cb => cb.id.replace('section-', ''));
+        formData.append('sectionsInclude', JSON.stringify(sectionsInclude));
 
-            sectionsInclude: Array.from(
-                document.querySelectorAll('input[type="checkbox"][id^="section-"]:checked')
-            ).map(cb => cb.id.replace('section-', '')),
+        formData.append('servicesProducts', document.getElementById('services-products')?.value.trim() || '');
+        formData.append('achievements', document.getElementById('achievements')?.value.trim() || '');
+        formData.append('primaryCta', document.getElementById('primary-cta')?.value || 'contact');
+        formData.append('customCta', document.getElementById('custom-cta')?.value.trim() || '');
+        formData.append('downloadTitle', document.getElementById('download-title')?.value.trim() || '');
+        formData.append('termsConsent', document.getElementById('terms-consent')?.checked || false);
+        formData.append('additionalNotes', document.getElementById('additional-notes')?.value.trim() || '');
+        formData.append('razorpayOrderId', '');
+        formData.append('razorpayPaymentId', '');
 
-            servicesProducts: document.getElementById('services-products')?.value.trim() || '',
-            achievements: document.getElementById('achievements')?.value.trim() || '',
-            primaryCta: document.getElementById('primary-cta')?.value || 'contact',
-            customCta: document.getElementById('custom-cta')?.value.trim() || '',
-            downloadTitle: document.getElementById('download-title')?.value.trim() || '',
-            termsConsent: document.getElementById('terms-consent')?.checked || false,
-            additionalNotes: document.getElementById('additional-notes')?.value.trim() || '',
+        // FIXED: Add files to FormData
+        if (uploadedFiles.logo) {
+            formData.append('image', uploadedFiles.logo);
+            console.log('Added logo file:', uploadedFiles.logo.name);
+        }
 
-            razorpayOrderId: null,
-            razorpayPaymentId: null
-        };
+        if (uploadedFiles.documents && uploadedFiles.documents.length > 0) {
+            uploadedFiles.documents.forEach((doc, index) => {
+                formData.append('document', doc);
+                console.log(`Added document ${index + 1}:`, doc.name);
+            });
+        }
 
-        // Submit to backend
+        console.log('Submitting FormData with files...');
+
+        // Submit to backend with FormData
         try {
             showToast('Submitting application...', 'info');
+            
             const response = await fetch('http://localhost:4000/api/applications/submit', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: formData // Don't set Content-Type header - let browser set it with boundary
             });
 
             const result = await response.json();
 
             if (!response.ok || !result.success) {
-                throw new Error(result.message || 'Failed to submit application');
+                throw new Error(result.message || result.error || 'Failed to submit application');
             }
 
+            console.log('Application submitted successfully:', result);
             showToast('Application submitted successfully! Proceeding to payment...', 'success');
+            
             submitBtn.innerHTML = `
                 <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -1396,90 +1526,50 @@ function initializeFormSubmission() {
                 </svg> Processing Payment...
             `;
 
+            // Proceed to payment
             await handlePayment(
                 result.data.id,
-                formData.fullName,
-                formData.email,
-                formData.phone
+                document.getElementById('full-name').value.trim(),
+                document.getElementById('email').value.trim(),
+                document.getElementById('phone').value.trim()
             );
+
         } catch (err) {
             console.error('Application submission error:', err);
             showToast(`Error: ${err.message}`, 'error');
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = 'Submit Application & Proceed to Payment';
+            resetSubmitButton();
         }
     });
-}
-
-// Load pack prices from API
-async function loadPackPrices() {
-    try {
-        const response = await fetch('http://localhost:4000/api/packs');
-        const data = await response.json();
-
-        if (data.success && data.pack_price) {
-            const prices = data.pack_price;
-
-            if (prices.basic !== undefined) {
-                document.getElementById('starter-price').innerText = `₹${prices.basic}`;
-                // Update the onclick handler for Starter Pack
-                const starterButton = document.querySelector('[onclick*="Starter Pack"]');
-                if (starterButton) {
-                    starterButton.setAttribute('onclick', `selectPlanAndScrollToForm('Starter Pack', ${prices.basic}); return false;`);
-                }
-            }
-
-            if (prices.standard !== undefined) {
-                document.getElementById('entrepreneur-price').innerText = `₹${prices.standard}`;
-                // Update the onclick handler for Entrepreneur Plan
-                const entrepreneurButton = document.querySelector('[onclick*="Entrepreneur Plan"]');
-                if (entrepreneurButton) {
-                    entrepreneurButton.setAttribute('onclick', `selectPlanAndScrollToForm('Entrepreneur Plan', ${prices.standard}); return false;`);
-                }
-            }
-
-            if (prices.premium !== undefined && prices.premium !== 0) {
-                document.getElementById('enterprise-price').innerText = `₹${prices.premium}`;
-                // Update the onclick handler for Enterprise Plan
-                const enterpriseButton = document.querySelector('[onclick*="Enterprise Plan"]');
-                if (enterpriseButton) {
-                    enterpriseButton.setAttribute('onclick', `selectPlanAndScrollToForm('Enterprise Plan', ${prices.premium}); return false;`);
-                }
-            } else {
-                document.getElementById('enterprise-price').innerText = `Coming Soon`;
-            }
-        } else {
-            console.error('pack_price not found in response');
-        }
-    } catch (error) {
-        console.error('Failed to fetch pack prices', error);
-    }
 }
 
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded, initializing...');
     
-    // Initialize all functionality
-    initializeColorPickers();
-    initializeCTAHandling();
-    initializeDragAndDrop();
-    initializeFormSubmission();
-    loadPackPrices();
-    
-    console.log('All JavaScript initialized successfully');
+    // Load prices first, then initialize everything else
+    loadPackPrices().then(() => {
+        initializeColorPickers();
+        initializeCTAHandling();
+        initializeDragAndDrop();
+        initializeFormSubmission();
+        
+        console.log('All JavaScript initialized successfully');
+    }).catch(error => {
+        console.error('Error during initialization:', error);
+        // Initialize other functions even if price loading fails
+        initializeColorPickers();
+        initializeCTAHandling();
+        initializeDragAndDrop();
+        initializeFormSubmission();
+    });
 });
 
-// Fix SVG attributes
-document.querySelectorAll('svg').forEach(svg => {
-    if (svg.getAttribute('width') === 'auto') {
-        svg.setAttribute('width', '100%');
+// Call when window loads as backup
+window.addEventListener('load', function() {
+    if (Object.keys(packPrices).length === 3 && packPrices.basic === 699) {
+        // Only reload if we still have fallback prices
+        loadPackPrices();
     }
-    if (svg.getAttribute('height') === 'auto') {
-        svg.setAttribute('height', '100%');
-    }
-});
-    </script>
+});  </script>
 </body>
 </html>

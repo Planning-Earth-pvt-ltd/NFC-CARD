@@ -1,12 +1,39 @@
 const express = require('express');
 const router = express.Router();
 const dotenv = require('dotenv');
+const upload = require('../middlewares/upload');
 dotenv.config();
 
 const Application = require('../models/DigitalCardProfile');
-
 const { sendApplicationEmail, sendConfirmationEmail, testEmailConfig } = require('../Service/emailService');
 
+// FIXED: Pack prices mapping for proper price calculation
+const PACK_PRICES = {
+  'Starter Pack': 699,
+  'Entrepreneur Plan': 1499,
+  'Enterprise Pack': 0
+};
+
+// GET /api/applications/packs - New route to get pack prices
+router.get('/packs', async (req, res) => {
+  try {
+    res.json({
+      success: true,
+      pack_price: {
+        basic: PACK_PRICES['Starter Pack'],
+        standard: PACK_PRICES['Entrepreneur Plan'],
+        premium: PACK_PRICES['Enterprise Pack']
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching pack prices:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch pack prices',
+      message: error.message
+    });
+  }
+});
 
 // Validate required fields
 function validateRequiredFields(data) {
@@ -30,73 +57,125 @@ function validateRequiredFields(data) {
   return { isValid: true };
 }
 
-  // Prepare data for creation
-  function prepareApplicationData(formData) {
-    const price = parseFloat(formData.selectedPrice) || 699;
-  
-    return {
-      fullName: formData.fullName.trim(),
-      businessName: formData.businessName.trim(),
-      jobTitle: formData.jobTitle?.trim() || '',
-      tagline: formData.tagline?.trim() || '',
-      bio: formData.bio?.trim() || '',
-      address: formData.address?.trim() || '',
-      email: formData.email.trim().toLowerCase(),
-      phone: formData.phone.trim(),
-      whatsappEnabled: Boolean(formData.whatsappEnabled),
-      altPhone: formData.altPhone?.trim() || '',
-      website: formData.website?.trim() || '',
-      linkedin: formData.linkedin?.trim() || '',
-      instagram: formData.instagram?.trim() || '',
-      facebook: formData.facebook?.trim() || '',
-      twitter: formData.twitter?.trim() || '',
-      youtube: formData.youtube?.trim() || '',
-      otherSocialName: formData.otherSocialName?.trim() || '',
-      otherSocialUrl: formData.otherSocialUrl?.trim() || '',
-      primaryColor: formData.primaryColor || '#1e88e5',
-      secondaryColor: formData.secondaryColor || '#69db7c',
-      designPreference: formData.designPreference || 'modern',
-      industry: formData.industry,
-      sectionsInclude: Array.isArray(formData.sectionsInclude) ? formData.sectionsInclude : [],
-      servicesProducts: formData.servicesProducts?.trim() || '',
-      achievements: formData.achievements?.trim() || '',
-      primaryCta: formData.primaryCta || 'contact',
-      customCta: formData.customCta?.trim() || '',
-      downloadTitle: formData.downloadTitle?.trim() || '',
-      selectedPlan: formData.selectedPlan || 'Starter Pack',
-      price,
-      termsConsent: Boolean(formData.termsConsent),
-      additionalNotes: formData.additionalNotes?.trim() || '',
-      applicationDate: new Date(),
-      status: 'pending',
-      paymentStatus: 'unpaid',
-      razorpayOrderId: formData.razorpayOrderId || null,
-      razorpayPaymentId: formData.razorpayPaymentId || null,
-    };
-  }
-  
+// FIXED: Single function to prepare application data
+function prepareApplicationData(formData, files = {}) {
+  console.log('>>> PREPARING DATA WITH:', {
+    selectedPlan: formData.selectedPlan,
+    selectedPrice: formData.selectedPrice,
+    typeof_price: typeof formData.selectedPrice
+  });
 
-// Submit application
-router.post('/submit', async (req, res) => {
-  console.log('>>> RECEIVED BODY:', req.body); 
+  // FIXED: Determine correct price
+  let finalPrice = formData.selectedPrice;
+  
+  // If price is missing or invalid, map from plan name
+  if (!finalPrice || isNaN(parseFloat(finalPrice))) {
+    finalPrice = PACK_PRICES[formData.selectedPlan] || PACK_PRICES['Starter Pack'];
+    console.log('>>> MAPPED PRICE FROM PLAN:', finalPrice);
+  } else {
+    finalPrice = parseFloat(finalPrice);
+  }
+
+  // Validate plan exists
+  const validPlans = Object.keys(PACK_PRICES);
+  const selectedPlan = validPlans.includes(formData.selectedPlan) 
+    ? formData.selectedPlan 
+    : 'Starter Pack';
+
+  console.log('>>> FINAL PRICE:', finalPrice, 'FINAL PLAN:', selectedPlan);
+
+  return {
+    fullName: formData.fullName.trim(),
+    businessName: formData.businessName.trim(),
+    jobTitle: formData.jobTitle?.trim() || '',
+    tagline: formData.tagline?.trim() || '',
+    bio: formData.bio?.trim() || '',
+    address: formData.address?.trim() || '',
+    email: formData.email.trim().toLowerCase(),
+    phone: formData.phone.trim(),
+    whatsappEnabled: Boolean(formData.whatsappEnabled),
+    altPhone: formData.altPhone?.trim() || '',
+    website: formData.website?.trim() || '',
+    linkedin: formData.linkedin?.trim() || '',
+    instagram: formData.instagram?.trim() || '',
+    facebook: formData.facebook?.trim() || '',
+    twitter: formData.twitter?.trim() || '',
+    youtube: formData.youtube?.trim() || '',
+    otherSocialName: formData.otherSocialName?.trim() || '',
+    otherSocialUrl: formData.otherSocialUrl?.trim() || '',
+    primaryColor: formData.primaryColor || '#1e88e5',
+    secondaryColor: formData.secondaryColor || '#69db7c',
+    designPreference: formData.designPreference || 'modern',
+    industry: formData.industry,
+    sectionsInclude: Array.isArray(formData.sectionsInclude) ? formData.sectionsInclude : [],
+    servicesProducts: formData.servicesProducts?.trim() || '',
+    achievements: formData.achievements?.trim() || '',
+    primaryCta: formData.primaryCta || 'contact',
+    customCta: formData.customCta?.trim() || '',
+    downloadTitle: formData.downloadTitle?.trim() || '',
+    selectedPlan: selectedPlan, // FIXED: Use validated plan
+    price: finalPrice, // FIXED: Use calculated price
+    termsConsent: Boolean(formData.termsConsent),
+    additionalNotes: formData.additionalNotes?.trim() || '',
+    applicationDate: new Date(),
+    status: 'pending',
+    paymentStatus: 'unpaid',
+    razorpayOrderId: formData.razorpayOrderId || null,
+    razorpayPaymentId: formData.razorpayPaymentId || null,
+    imagePath: files?.image && files.image[0] ? files.image[0].path : null,
+    documentPath: files?.document && files.document[0] ? files.document[0].path : null
+  };
+}
+
+// FIXED: Submit application with proper file handling and logging
+router.post('/submit',
+upload.fields([
+  { name: 'image', maxCount: 1 },
+  { name: 'document', maxCount: 1 }
+]), async (req, res) => {
+  console.log('>>> RECEIVED BODY:', JSON.stringify(req.body, null, 2)); 
+  console.log('>>> RECEIVED FILES:', req.files);
+  
   try {
     const formData = req.body;
     const validation = validateRequiredFields(formData);
 
     if (!validation.isValid) {
-      return res.status(400).json({ success: false, error: 'Validation failed', details: validation.errors });
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Validation failed', 
+        details: validation.errors 
+      });
     }
 
-    const profileData = prepareApplicationData(formData);
+    const profileData = prepareApplicationData(formData, req.files);
+    
+    console.log('>>> SAVING TO DB:', {
+      selectedPlan: profileData.selectedPlan,
+      price: profileData.price,
+      fullName: profileData.fullName,
+      email: profileData.email
+    });
+
     const savedApp = await Application.create(profileData);
+    
+    console.log('>>> SAVED APPLICATION:', {
+      id: savedApp.id,
+      price: savedApp.price,
+      selectedPlan: savedApp.selectedPlan
+    });
 
     // Send emails in background
     Promise.allSettled([
       sendApplicationEmail(savedApp),
       sendConfirmationEmail(savedApp)
     ]).then(([adminRes, userRes]) => {
-      if (adminRes.status !== 'fulfilled') console.error('Admin email failed:', adminRes.reason || adminRes.value?.error);
-      if (userRes.status !== 'fulfilled') console.error('User email failed:', userRes.reason || userRes.value?.error);
+      if (adminRes.status !== 'fulfilled') {
+        console.error('Admin email failed:', adminRes.reason || adminRes.value?.error);
+      }
+      if (userRes.status !== 'fulfilled') {
+        console.error('User email failed:', userRes.reason || userRes.value?.error);
+      }
     });
 
     res.status(201).json({
@@ -107,7 +186,7 @@ router.post('/submit', async (req, res) => {
         fullName: savedApp.fullName,
         businessName: savedApp.businessName,
         selectedPlan: savedApp.selectedPlan,
-        selectedPrice: savedApp.selectedPrice,
+        price: savedApp.price, // FIXED: Return the actual price
         applicationDate: savedApp.applicationDate,
         status: savedApp.status,
         email: savedApp.email,
@@ -115,11 +194,14 @@ router.post('/submit', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ success: false, error: 'Server error', message: error.message });
+    console.error('>>> ERROR SUBMITTING APPLICATION:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Server error', 
+      message: error.message 
+    });
   }
 });
-
 
 // GET /api/applications
 router.get('/', async (req, res) => {
