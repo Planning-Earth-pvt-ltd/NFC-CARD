@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart NFC Business Cards | PlanningEarth</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1e88e5;
+            --primary-green: #69db7c;
+            --accent-orange: #ffa94d;
+            --light-bg: #f8faff;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #555;
+            overflow-x: hidden;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-green) 100%);
+        }
+        
+        .btn-primary {
+            background-color: var(--accent-orange);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 169, 77, 0.3);
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(255, 169, 77, 0.4);
+        }
+        
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .pricing-card {
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .pricing-content-area {
+            flex-grow: 1;
+            margin-bottom: 1rem;
+        }
+        
+        .form-input:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.2);
+        }
+        
+        .card-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(30, 136, 229, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 20px rgba(30, 136, 229, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(30, 136, 229, 0);
+            }
+        }
+        
+        .form-section {
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-section:last-of-type {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .color-preview {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 0.375rem;
+            display: inline-block;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Image upload styles */
+        .upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-blue);
+            background-color: #f8faff;
+        }
+
+        .upload-area.dragover {
+            border-color: var(--primary-blue);
+            background-color: #f0f9ff;
+        }
+
+        .image-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .image-item {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #e5e7eb;
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-remove {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .image-remove:hover {
+            background: rgba(239, 68, 68, 1);
+        }
+        
+        @media (max-width: 640px) {
+            .card-mockup {
+                transform: scale(0.8);
+                margin: 0 auto;
+            }
+            
+            .feature-card:hover {
+                transform: translateY(-3px);
+            }
+            
+            .pricing-card:hover {
+                transform: translateY(-3px);
+            }
+            
+            .hero-content {
+                text-align: center;
+            }
+            
+            .hero-cta {
+                display: flex;
+                justify-content: center;
+            }
+            
+            .form-input, .form-select, .form-textarea {
+                font-size: 16px;
+            }
+            
+            button, .btn-primary {
+                min-height: 44px;
+            }
+            
+            .form-section {
+                padding-bottom: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .image-item {
+                width: 80px;
+                height: 80px;
+            }
+        }
+        
+        input[type="color"] {
+            -webkit-appearance: none;
+            padding: 0;
+            border: none;
+            border-radius: 4px;
+            width: 40px;
+            height: 40px;
+        }
+        
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        
+        input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: 4px;
+        }
+        
+        input[type="checkbox"], input[type="radio"] {
+            min-width: 18px;
+            min-height: 18px;
+        }
+        
+        select, input, textarea {
+            line-height: 1.5;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .animate-shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        
+        button:focus, a:focus {
+            outline: 2px solid var(--primary-blue);
+            outline-offset: 2px;
+        }
+        
+        button:active, a.btn-primary:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(255, 169, 77, 0.3);
+        }
+        
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: #333;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            transform: translateY(100px);
+            opacity: 0;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .toast.success {
+            background: #69db7c;
+        }
+        
+        .toast.error {
+            background: #ff6b6b;
+        }
+    </style>
+</head>
+<body>
+    <section class="py-8 sm:py-12 md:py-16 lg:py-24 bg-[#f8faff]">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-8 md:mb-0 hero-content">
+                    <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-3 sm:mb-4 text-[#1e88e5]">
+                        Tap. Connect. Impress. <span class="block">The Future of Networking is Here.</span>
+                    </h1>
+                    <h2 class="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 mb-6 sm:mb-8">
+                        Seamlessly share contacts & showcase your business with one tap. Revolutionize connections.
+                    </h2>
+                    <div class="hero-cta">
+                        <a href="#apply" class="btn-primary inline-block px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 rounded-lg text-white font-semibold text-base sm:text-lg" onclick="scrollToForm(); return false;">
+                            Apply for Your Custom Card
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center">
+                    <div class="relative w-full max-w-md flex items-center justify-center">
+                        <div class="relative card-mockup">
+                            <div class="w-60 sm:w-64 md:w-72 h-36 sm:h-40 md:h-44 bg-gradient-to-r from-[#1e88e5] to-[#69db7c] rounded-xl shadow-xl flex flex-col justify-center items-center p-4 sm:p-6 card-animation">
+                                <div class="absolute top-0 left-0 w-full h-full bg-white opacity-10 rounded-xl"></div>
+                                <div class="text-white text-center">
+                                    <p class="font-medium text-lg sm:text-xl mb-1">John Smith</p>
+                                    <p class="text-xs sm:text-sm opacity-80 mb-2 sm:mb-3">Business Development Manager</p>
+                                    <div class="w-full border-t border-white border-opacity-30 my-1 sm:my-2"></div>
+                                    <div class="flex justify-center mt-2 sm:mt-3">
+                                        <span class="text-xs bg-white bg-opacity-20 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full">Tap to Connect</span>
+                                    </div>
+                                </div>
+                                <div class="absolute -top-3 sm:-top-4 -right-3 sm:-right-4 w-8 sm:w-10 md:w-12 h-8 sm:h-10 md:h-12">
+                                    <div class="absolute inset-0 rounded-full border-2 border-white opacity-30 animate-ping"></div>
+                                    <div class="absolute inset-2 rounded-full border-2 border-white opacity-50 animate-ping" style="animation-delay: 0.5s"></div>
+                                    <div class="absolute inset-4 rounded-full border-2 border-white opacity-70 animate-ping" style="animation-delay: 1s"></div>
+                                </div>
+                            </div>
+                            <div class="absolute -bottom-12 sm:-bottom-16 -right-12 sm:-right-16 w-20 sm:w-24 md:w-32 h-36 sm:h-44 md:h-56 border-4 border-gray-200 rounded-3xl bg-white bg-opacity-50 backdrop-blur-sm z-[-1] hidden sm:block"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="py-8 sm:py-12 md:py-16 lg:py-24">
+        <div class="container mx-auto px-4 md:px-6">
+            <h2 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-8 sm:mb-10 md:mb-16 text-[#1e88e5]">
+                Unlock New Opportunities: Your Smart NFC Card Features
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+                <div class="feature-card bg-white rounded-xl p-5 sm:p-6 md:p-8 shadow-lg border border-gray-100">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full gradient-bg flex items-center justify-center mb-3 sm:mb-4 md:mb-6 mx-auto sm:mx-0" >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                    </div>
+                    <h3 class="text-base sm:text-lg md:text-xl font-semibold mb-2 md:mb-3 text-center sm:text-left">Instant Contact Saving</h3>
+                    <p class="text-sm md:text-base text-gray-600 text-center sm:text-left">Saves full VCF to phone with a single tap. No manual entry, no errors, just seamless connection.</p>
+                </div>
+                
+                <div class="feature-card bg-white rounded-xl p-5 sm:p-6 md:p-8 shadow-lg border border-gray-100">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full gradient-bg flex items-center justify-center mb-3 sm:mb-4 md:mb-6 mx-auto sm:mx-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"width="auto" height="auto">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0-3-4.03-3-9s1.343-9 3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                        </svg>
+                    </div>
+                    <h3 class="text-base sm:text-lg md:text-xl font-semibold mb-2 md:mb-3 text-center sm:text-left">Integrated Business Profile</h3>
+                    <p class="text-sm md:text-base text-gray-600 text-center sm:text-left">Links to your personalized, professional landing page with your details, portfolio, and services.</p>
+                </div>
+                
+                <div class="feature-card bg-white rounded-xl p-5 sm:p-6 md:p-8 shadow-lg border border-gray-100">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full gradient-bg flex items-center justify-center mb-3 sm:mb-4 md:mb-6 mx-auto sm:mx-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11" />
+                        </svg>
+                    </div>
+                    <h3 class="text-base sm:text-lg md:text-xl font-semibold mb-2 md:mb-3 text-center sm:text-left">One-Tap Dual Action</h3>
+                    <p class="text-sm md:text-base text-gray-600 text-center sm:text-left">Saves contacts AND opens your profile page simultaneously, creating a seamless experience.</p>
+                </div>
+                
+                <div class="feature-card bg-white rounded-xl p-5 sm:p-6 md:p-8 shadow-lg border border-gray-100">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full gradient-bg flex items-center justify-center mb-3 sm:mb-4 md:mb-6 mx-auto sm:mx-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-base sm:text-lg md:text-xl font-semibold mb-2 md:mb-3 text-center sm:text-left">Modern & Memorable</h3>
+                    <p class="text-sm md:text-base text-gray-600 text-center sm:text-left">Sleek, tech-savvy design leaves a lasting impression on clients and partners.</p>
+                </div>
+                
+                <div class="feature-card bg-white rounded-xl p-5 sm:p-6 md:p-8 shadow-lg border border-gray-100">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full gradient-bg flex items-center justify-center mb-3 sm:mb-4 md:mb-6 mx-auto sm:mx-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                    </div>
+                    <h3 class="text-base sm:text-lg md:text-xl font-semibold mb-2 md:mb-3 text-center sm:text-left">Eco-Friendly & Up-to-Date</h3>
+                    <p class="text-sm md:text-base text-gray-600 text-center sm:text-left">Reusable digital solution; profile updates without needing new physical cards.</p>
+                </div>
+                
+                <div class="feature-card bg-white rounded-xl p-5 sm:p-6 md:p-8 shadow-lg border border-gray-100">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full gradient-bg flex items-center justify-center mb-3 sm:mb-4 md:mb-6 mx-auto sm:mx-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-base sm:text-lg md:text-xl font-semibold mb-2 md:mb-3 text-center sm:text-left">Professional & Secure</h3>
+                    <p class="text-sm md:text-base text-gray-600 text-center sm:text-left">Share only what you want, when you want. Full control over your digital presence.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <section id="pricing" class="py-8 sm:py-12 md:py-16 lg:py-24 bg-[#f8faff]">
+            <div class="container mx-auto px-4 md:px-6">
+                <h2 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-8 sm:mb-10 md:mb-16 text-[#1e88e5]">
+                    Choose Your Smart Card Plan
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-stretch justify-items-center">
+                    <div class="pricing-card bg-white rounded-xl p-5 sm:p-6 md:p-8 shadow-lg border-2 border-[#69db7c] relative w-full max-w-sm">
+                        <div class="absolute top-0 right-0 bg-[#69db7c] text-white px-2 sm:px-3 md:px-4 py-0.5 sm:py-1 rounded-bl-lg rounded-tr-lg text-xs md:text-sm font-medium">
+                            POPULAR
+                        </div>
+                        <div class="pricing-content-area">
+                            <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-2 text-[#1e88e5]">Starter Pack</h3>
+                            <div class="flex items-end mb-4 sm:mb-6">
+                                <span id="starter-price" class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1e88e5]">₹...</span>
+
+                                <span class="text-gray-500 ml-1 mb-1 text-base sm:text-lg md:text-xl">one-time</span>
+                                <span class="text-gray-500 ml-1 mb-1 inline-block scale-[0.6] origin-left">  (incl. taxes)</span>
+                                
+                            </div>
+                            <ul class="mb-5 sm:mb-6 md:mb-8 space-y-1.5 sm:space-y-2 md:space-y-3">
+                                <li class="flex items-start">
+                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span class="text-sm md:text-base">1 Custom NFC Business Card</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span class="text-sm md:text-base">Personalized Business Landing Page</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span class="text-sm md:text-base">Contact Data Integration (VCF)</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span class="text-sm md:text-base">Professional Design & Encoding</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <a href="#apply" class="btn-primary block text-center px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg text-white font-semibold text-sm md:text-base" onclick="selectPlanAndScrollToForm('Starter Pack', 699); return false;">
+                            Select Starter Pack
+                        </a>
+                    </div>
+                    
+                    <div class="pricing-card bg-white rounded-xl p-5 sm:p-6 md:p-8 shadow-lg border-2 border-[#1e88e5] relative w-full max-w-sm">
+                        <div class="pricing-content-area">
+                            <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-2 text-[#1e88e5]">Entrepreneur Plan</h3>
+                            <div class="flex items-end mb-4 sm:mb-6">
+                                <span id="entrepreneur-price" class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1e88e5]">₹...</span>
+
+                                <span class="text-gray-500 ml-1 mb-1.5 text-3xl sm:text-sl md:text-base">per month</span>
+                                <span class="text-gray-500 ml-1 mb-1 inline-block scale-[0.6] origin-left"> (incl. taxes)</span>
+                            </div>
+                            <ul class="mb-5 sm:mb-6 md:mb-8 space-y-1.5 sm:space-y-2 md:space-y-3">
+                                <li class="flex items-start">
+                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span class="text-sm md:text-base">All Starter Pack Features</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span class="text-sm md:text-base">Company CRM Software Subscription</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span class="text-sm md:text-base">Personalized Digital Catalog</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"width="auto" height="auto">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span class="text-sm md:text-base">Personalized Landing Page (Excl. Domain/Hosting)</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <a href="#apply" class="btn-primary block text-center px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg text-white font-semibold text-sm md:text-base" onclick="selectPlanAndScrollToForm('Entrepreneur Plan', 1499); return false;">
+                            Select Entrepreneur Plan
+                        </a>
+                    </div>
+                    
+                    <div class="pricing-card bg-white rounded-xl p-5 sm:p-6 md:p-8 shadow-lg border border-gray-200 w-full max-w-sm">
+                        <div class="pricing-content-area">
+                            <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-2 text-[#1e88e5]">Enterprise Pack</h3>
+                            <div class="flex items-end mb-4 sm:mb-6">
+                                <span id="enterprise-price" class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1e88e5]">₹...</span>
+
+                                <span class="text-gray-500 ml-1 mb-1 text-xs sm:text-sm md:text-base">one-time</span>
+
+                            </div>
+                            <ul class="mb-5 sm:mb-6 md:mb-8 space-y-1.5 sm:space-y-2 md:space-y-3 text-gray-400">
+                                <li class="flex items-start">
+                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span class="text-sm md:text-base">Coming Soon</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span class="text-sm md:text-base">Coming Soon</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span class="text-sm md:text-base">Coming Soon</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <span class="text-sm md:text-base">Coming Soon</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <button class="block w-full px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg bg-gray-200 text-gray-500 font-semibold text-sm md:text-base cursor-not-allowed" onclick="showToast('Enterprise Pack coming soon!', 'info')">
+                            Coming Soon
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    <section id="apply" class="py-8 sm:py-12 md:py-16 lg:py-24">
+        <div class="container mx-auto px-4 md:px-6 max-w-4xl">
+            <h2 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-3 sm:mb-4 md:mb-6 text-[#1e88e5]">
+                Apply for Your Custom NFC Card & Digital Profile
+            </h2>
+            <p class="text-center text-gray-600 mb-6 sm:mb-8 md:mb-12 max-w-2xl mx-auto text-sm md:text-base">
+                Fill out the form below with your details. Our team will use this information to create your personalized NFC card and business profile page.
+            </p>
+            
+            <form id="application-form" class="bg-white rounded-xl p-4 sm:p-6 md:p-8 shadow-lg border border-gray-100">
+                <div id="selected-plan-info" class="hidden mb-6 p-4 bg-[#f0f9ff] rounded-lg border border-[#bae6fd]">
+                    <h4 class="font-semibold text-[#1e88e5] mb-2">Selected Plan</h4>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p id="selected-plan-name" class="font-medium">Starter Pack</p>
+                            <p id="selected-plan-price" class="text-gray-600">₹699</p>
+                        </div>
+                        <button type="button" class="text-sm text-[#1e88e5] hover:underline" onclick="clearSelectedPlan()">Change</button>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3 class="section-title text-base sm:text-lg md:text-xl">Personal & Business Information</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
+                        <div>
+                            <label class="block text-gray-700 mb-1 text-sm md:text-base" for="full-name">Full Name *</label>
+                            <input type="text" id="full-name" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1 text-sm md:text-base" for="business-name">Business/Company Name *</label>
+                            <input type="text" id="business-name" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1 text-sm md:text-base" for="job-title">Job Title/Position *</label>
+                            <input type="text" id="job-title" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1 text-sm md:text-base" for="tagline">Professional Tagline/Slogan</label>
+                            <input type="text" id="tagline" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" placeholder="e.g., 'Connecting businesses through innovation'">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3 sm:mt-4 md:mt-6">
+                        <label class="block text-gray-700 mb-1 text-sm md:text-base" for="bio">Brief Bio/Company Description *</label>
+                        <textarea id="bio" rows="4" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" required placeholder="Tell us about yourself or your company (150-200 words recommended)"></textarea>
+                    </div>
+                    
+                    <div class="mt-3 sm:mt-4 md:mt-6">
+                        <label class="block text-gray-700 mb-1 text-sm md:text-base" for="address">Physical Address</label>
+                        <textarea id="address" rows="3" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" placeholder="Only if you want to display it on your profile"></textarea>
+                        <p class="text-xs md:text-sm text-gray-500 mt-1">Leave blank if you prefer not to display your address.</p>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3 class="section-title text-base sm:text-lg md:text-xl">Contact Information</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
+                        <div>
+                            <label class="block text-gray-700 mb-1 text-sm md:text-base" for="email">Email Address *</label>
+                            <input type="email" id="email" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1 text-sm md:text-base" for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" required>
+                            <div class="mt-1.5 flex items-center">
+                                <input type="checkbox" id="whatsapp-enabled" class="form-checkbox h-4 w-4 text-[#1e88e5]">
+                                <label for="whatsapp-enabled" class="ml-2 text-xs sm:text-sm text-gray-600">This number is available on WhatsApp</label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1 text-sm md:text-base" for="alt-phone">Alternative Phone Number</label>
+                            <input type="tel" id="alt-phone" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1 text-sm md:text-base" for="website">Website URL</label>
+                            <input type="url" id="website" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" placeholder="https://yourwebsite.com">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3 class="section-title text-base sm:text-lg md:text-xl">Social Media Accounts</h3>
+                    <p class="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">Add links to your social media profiles that you want to display on your digital business card.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
+                        <div>
+                            <label class="block text-gray-700 mb-1 text-sm md:text-base" for="linkedin">LinkedIn Profile URL</label>
+                            <input type="url" id="linkedin" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" placeholder="https://linkedin.com/in/yourprofile">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1 text-sm md:text-base" for="instagram">Instagram Handle/URL</label>
+                            <input type="text" id="instagram" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" placeholder="@username or full URL">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1 text-sm md:text-base" for="facebook">Facebook Page URL</label>
+                            <input type="url" id="facebook" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" placeholder="https://facebook.com/yourpage">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1 text-sm md:text-base" for="twitter">Twitter/X Handle</label>
+                            <input type="text" id="twitter" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" placeholder="@username">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1 text-sm md:text-base" for="youtube">YouTube Channel</label>
+                            <input type="url" id="youtube" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" placeholder="https://youtube.com/c/yourchannel">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1 text-sm md:text-base" for="other-social">Other Platform</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <input type="text" id="other-social-name" class="form-input col-span-1 px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" placeholder="Platform">
+                                <input type="url" id="other-social-url" class="form-input col-span-2 px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" placeholder="URL">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3 class="section-title text-base sm:text-lg md:text-xl">Visual Branding & Images</h3>
+                    
+                    <div class="mb-3 sm:mb-4 md:mb-6">
+                        <label class="block text-gray-700 mb-1 text-sm md:text-base">Brand Colors</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
+                            <div>
+                                <label class="block text-gray-600 text-xs sm:text-sm mb-1">Primary Color</label>
+                                <div class="flex items-center">
+                                    <input type="color" id="primary-color" class="h-8 w-8 sm:h-10 sm:w-10 rounded border border-gray-300 mr-2" value="#1e88e5">
+                                    <input type="text" id="primary-color-hex" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" placeholder="#1e88e5" value="#1e88e5">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-gray-600 text-xs sm:text-sm mb-1">Secondary Color</label>
+                                <div class="flex items-center">
+                                    <input type="color" id="secondary-color" class="h-8 w-8 sm:h-10 sm:w-10 rounded border border-gray-300 mr-2" value="#69db7c">
+                                    <input type="text" id="secondary-color-hex" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" placeholder="#69db7c" value="#69db7c">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 sm:mb-4 md:mb-6">
+                        <label class="block text-gray-700 mb-1 text-sm md:text-base" for="design-preference">Design Preferences</label>
+                        <select id="design-preference" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base">
+                            <option value="">Select a design style</option>
+                            <option value="modern">Modern & Clean</option>
+                            <option value="minimalist">Minimalist</option>
+                            <option value="bold">Bold & Vibrant</option>
+                            <option value="corporate">Corporate & Professional</option>
+                            <option value="creative">Creative & Artistic</option>
+                            <option value="tech">Tech & Innovative</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3 sm:mb-4 md:mb-6">
+                        <label class="block text-gray-700 mb-1 text-sm md:text-base" for="industry">Industry/Sector *</label>
+                        <select id="industry" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" required>
+                            <option value="">Select your industry</option>
+                            <option value="technology">Technology & IT</option>
+                            <option value="finance">Finance & Banking</option>
+                            <option value="healthcare">Healthcare & Medical</option>
+                            <option value="education">Education & Training</option>
+                            <option value="marketing">Marketing & Advertising</option>
+                            <option value="retail">Retail & E-commerce</option>
+                            <option value="real-estate">Real Estate & Construction</option>
+                            <option value="hospitality">Hospitality & Tourism</option>
+                            <option value="legal">Legal & Consulting</option>
+                            <option value="manufacturing">Manufacturing & Engineering</option>
+                            <option value="creative">Creative & Design</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3 sm:mb-4 md:mb-6">
+                        <label class="block text-gray-700 mb-2 text-sm md:text-base">Logo Upload</label>
+                        <div class="upload-area" id="logo-upload-area" onclick="document.getElementById('logo-input').click()">
+                            <input type="file" id="logo-input" class="hidden" accept="image/*" onchange="handleLogoUpload(this)">
+                            <svg class="mx-auto h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                            <p class="mt-2 text-sm text-gray-600">Click to upload your logo or drag and drop</p>
+                            <p class="text-xs text-gray-500">PNG, JPG up to 5MB</p>
+                        </div>
+                        <div id="logo-preview" class="image-preview"></div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3 class="section-title text-base sm:text-lg md:text-xl">Content Sections</h3>
+                    
+                    <div class="mb-3 sm:mb-4 md:mb-6">
+                        <label class="block text-gray-700 mb-2 sm:mb-3 text-sm md:text-base">Sections to Include</label>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="section-about" class="form-checkbox h-4 w-4 text-[#1e88e5]" checked>
+                                <label for="section-about" class="ml-2 text-xs sm:text-sm text-gray-700">About</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="section-services" class="form-checkbox h-4 w-4 text-[#1e88e5]" checked>
+                                <label for="section-services" class="ml-2 text-xs sm:text-sm text-gray-700">Services/Products</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="section-portfolio" class="form-checkbox h-4 w-4 text-[#1e88e5]">
+                                <label for="section-portfolio" class="ml-2 text-xs sm:text-sm text-gray-700">Portfolio/Work</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="section-testimonials" class="form-checkbox h-4 w-4 text-[#1e88e5]">
+                                <label for="section-testimonials" class="ml-2 text-xs sm:text-sm text-gray-700">Testimonials</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="section-contact" class="form-checkbox h-4 w-4 text-[#1e88e5]" checked>
+                                <label for="section-contact" class="ml-2 text-xs sm:text-sm text-gray-700">Contact Form</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="section-social" class="form-checkbox h-4 w-4 text-[#1e88e5]" checked>
+                                <label for="section-social" class="ml-2 text-xs sm:text-sm text-gray-700">Social Media Links</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 sm:mb-4 md:mb-6">
+                        <label class="block text-gray-700 mb-1 text-sm md:text-base" for="services-products">Services or Products</label>
+                        <textarea id="services-products" rows="4" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" placeholder="List your key services or products, one per line"></textarea>
+                    </div>
+                    
+                    <div class="mb-3 sm:mb-4 md:mb-6">
+                        <label class="block text-gray-700 mb-1 text-sm md:text-base" for="achievements">Key Achievements/Statistics</label>
+                        <textarea id="achievements" rows="3" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" placeholder="e.g., '10+ years industry experience', '500+ satisfied clients', 'Award-winning service'"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3 class="section-title text-base sm:text-lg md:text-xl">Call-to-Action Preferences</h3>
+                    
+                    <div class="mb-3 sm:mb-4 md:mb-6">
+                        <label class="block text-gray-700 mb-1 text-sm md:text-base" for="primary-cta">Primary Action for Visitors *</label>
+                        <select id="primary-cta" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" required>
+                            <option value="">Select primary action</option>
+                            <option value="contact">Contact Me/Us</option>
+                            <option value="call">Call Now</option>
+                            <option value="whatsapp">Message on WhatsApp</option>
+                            <option value="book">Book an Appointment</option>
+                            <option value="download">Download Information</option>
+                            <option value="visit">Visit Website</option>
+                            <option value="follow">Follow on Social Media</option>
+                            <option value="other">Other (specify below)</option>
+                        </select>
+                        <input type="text" id="custom-cta" class="form-input w-full mt-2 px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base hidden" placeholder="Specify your custom call-to-action">
+                    </div>
+                    
+                    <div class="mb-3 sm:mb-4 md:mb-6">
+                        <label class="block text-gray-700 mb-2 text-sm md:text-base">Downloadable Content</label>
+                        <p class="text-xs sm:text-sm text-gray-600 mb-2">Upload documents like brochures, price lists, portfolios that visitors can download</p>
+                        <div class="upload-area" id="document-upload-area" onclick="document.getElementById('document-input').click()">
+                            <input type="file" id="document-input" class="hidden" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" multiple onchange="handleDocumentUpload(this)">
+                            <svg class="mx-auto h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <p class="mt-2 text-sm text-gray-600">Click to upload documents or drag and drop</p>
+                            <p class="text-xs text-gray-500">PDF, DOC, DOCX, JPG, PNG up to 10MB each</p>
+                        </div>
+                        <div id="document-preview" class="mt-2">
+                            <div id="document-list"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 sm:mb-4 md:mb-6">
+                        <label class="block text-gray-700 mb-1 text-sm md:text-base" for="download-title">Downloadable Content Title</label>
+                        <input type="text" id="download-title" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" placeholder="e.g., 'Download Our Portfolio', 'Get Our Price List'">
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3 class="section-title text-base sm:text-lg md:text-xl">Additional Notes</h3>
+                    
+                    <div class="mb-3 sm:mb-4 md:mb-6">
+                        <label class="block text-gray-700 mb-1 text-sm md:text-base" for="additional-notes">Any Other Information or Special Requests</label>
+                        <textarea id="additional-notes" rows="4" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" placeholder="Tell us anything else that would help us create your perfect digital business card"></textarea>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="mb-4 sm:mb-6 md:mb-8">
+                        <label class="flex items-start">
+                            <input type="checkbox" id="terms-consent" class="mt-1 form-checkbox h-4 w-4 md:h-5 md:w-5 text-[#1e88e5]" required>
+                            <span class="ml-2 md:ml-3 text-gray-700 text-xs sm:text-sm">I agree to the <a href="#" class="text-[#1e88e5] underline" onclick="showToast('Terms of Service document will open in a new tab', 'info'); return false;">Terms of Service</a> and <a href="#" class="text-[#1e88e5] underline" onclick="showToast('Privacy Policy document will open in a new tab', 'info'); return false;">Privacy Policy</a>. I understand that my information will be used to create my NFC card and business profile.</span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" id="submit-button" class="btn-primary w-full px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 rounded-lg text-white font-semibold text-sm sm:text-base md:text-lg">
+                        Submit Application & Proceed to Payment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <div id="toast-container"></div>
+
+    <script>
+     // Global variables for plan selection and file uploads
+let selectedPlan = null;
+let selectedPrice = null;
+let uploadedFiles = {
+    logo: null,
+    profile: [],
+    portfolio: [],
+    documents: []
+};
+
+// Plan selection functions
+function selectPlanAndScrollToForm(planName, price) {
+    selectedPlan = planName;
+    selectedPrice = price;
+    
+    // Update the plan info display
+    document.getElementById('selected-plan-name').textContent = planName;
+    document.getElementById('selected-plan-price').textContent = `₹${price}`;
+    document.getElementById('selected-plan-info').classList.remove('hidden');
+    
+    // Store the selected plan data in hidden inputs for form submission
+    let planInput = document.getElementById('hidden-selected-plan');
+    let priceInput = document.getElementById('hidden-selected-price');
+    
+    // Create hidden inputs if they don't exist
+    if (!planInput) {
+        planInput = document.createElement('input');
+        planInput.type = 'hidden';
+        planInput.id = 'hidden-selected-plan';
+        planInput.name = 'selectedPlan';
+        document.getElementById('application-form').appendChild(planInput);
+    }
+    
+    if (!priceInput) {
+        priceInput = document.createElement('input');
+        priceInput.type = 'hidden';
+        priceInput.id = 'hidden-selected-price';
+        priceInput.name = 'selectedPrice';
+        document.getElementById('application-form').appendChild(priceInput);
+    }
+    
+    // Update the hidden inputs with selected values
+    planInput.value = planName;
+    priceInput.value = price;
+    
+    console.log(`Plan selected: ${planName} - ₹${price}`); // Debug log
+    
+    // Scroll to form
+    scrollToForm();
+}
+
+function clearSelectedPlan() {
+    selectedPlan = null;
+    selectedPrice = null;
+    document.getElementById('selected-plan-info').classList.add('hidden');
+    
+    // Clear hidden inputs
+    const planInput = document.getElementById('hidden-selected-plan');
+    const priceInput = document.getElementById('hidden-selected-price');
+    
+    if (planInput) planInput.value = '';
+    if (priceInput) priceInput.value = '';
+}
+
+function scrollToForm() {
+    document.getElementById('apply').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Color picker synchronization
+function initializeColorPickers() {
+    const primaryColor = document.getElementById('primary-color');
+    const primaryColorHex = document.getElementById('primary-color-hex');
+    const secondaryColor = document.getElementById('secondary-color');
+    const secondaryColorHex = document.getElementById('secondary-color-hex');
+
+    if (primaryColor && primaryColorHex) {
+        primaryColor.addEventListener('change', function() {
+            primaryColorHex.value = this.value;
+        });
+
+        primaryColorHex.addEventListener('input', function() {
+            if (isValidHex(this.value)) {
+                primaryColor.value = this.value;
+            }
+        });
+    }
+
+    if (secondaryColor && secondaryColorHex) {
+        secondaryColor.addEventListener('change', function() {
+            secondaryColorHex.value = this.value;
+        });
+
+        secondaryColorHex.addEventListener('input', function() {
+            if (isValidHex(this.value)) {
+                secondaryColor.value = this.value;
+            }
+        });
+    }
+}
+
+function isValidHex(hex) {
+    return /^#([0-9A-F]{3}){1,2}$/i.test(hex);
+}
+
+// CTA selection handling
+function initializeCTAHandling() {
+    const primaryCta = document.getElementById('primary-cta');
+    const customCtaInput = document.getElementById('custom-cta');
+    
+    if (primaryCta && customCtaInput) {
+        primaryCta.addEventListener('change', function() {
+            if (this.value === 'other') {
+                customCtaInput.classList.remove('hidden');
+                customCtaInput.required = true;
+            } else {
+                customCtaInput.classList.add('hidden');
+                customCtaInput.required = false;
+            }
+        });
+    }
+}
+
+// File upload functions
+function handleLogoUpload(input) {
+    const file = input.files[0];
+    if (file && validateImage(file)) {
+        uploadedFiles.logo = file;
+        displayImagePreview('logo-preview', [file], 'logo');
+    }
+}
+
+function handleDocumentUpload(input) {
+    const files = Array.from(input.files);
+    if (files.length > 0 && files.every(validateDocument)) {
+        uploadedFiles.documents = files;
+        displayDocumentPreview('document-list', files);
+    }
+}
+
+function validateImage(file) {
+    const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+
+    if (!validTypes.includes(file.type)) {
+        showToast('Please upload only JPG or PNG images', 'error');
+        return false;
+    }
+
+    if (file.size > maxSize) {
+        showToast('Image size should be less than 5MB', 'error');
+        return false;
+    }
+
+    return true;
+}
+
+function validateDocument(file) {
+    const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/png'];
+    const maxSize = 10 * 1024 * 1024; // 10MB
+
+    if (!validTypes.includes(file.type)) {
+        showToast('Please upload only PDF, DOC, DOCX, JPG, or PNG files', 'error');
+        return false;
+    }
+
+    if (file.size > maxSize) {
+        showToast('File size should be less than 10MB', 'error');
+        return false;
+    }
+
+    return true;
+}
+
+function displayImagePreview(containerId, files, type) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    container.innerHTML = '';
+
+    files.forEach((file, index) => {
+        const imageItem = document.createElement('div');
+        imageItem.className = 'image-item';
+
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.alt = file.name;
+
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'image-remove';
+        removeBtn.innerHTML = '×';
+        removeBtn.onclick = () => removeImage(type, index);
+
+        imageItem.appendChild(img);
+        imageItem.appendChild(removeBtn);
+        container.appendChild(imageItem);
+    });
+}
+
+function displayDocumentPreview(containerId, files) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    container.innerHTML = '';
+
+    files.forEach((file, index) => {
+        const docItem = document.createElement('div');
+        docItem.className = 'flex items-center justify-between bg-gray-50 p-3 rounded-lg mb-2';
+
+        const fileInfo = document.createElement('div');
+        fileInfo.innerHTML = `
+            <p class="text-sm font-medium text-gray-900">${file.name}</p>
+            <p class="text-xs text-gray-500">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+        `;
+
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'text-red-600 hover:text-red-800 text-sm';
+        removeBtn.innerHTML = 'Remove';
+        removeBtn.onclick = () => removeDocument(index);
+
+        docItem.appendChild(fileInfo);
+        docItem.appendChild(removeBtn);
+        container.appendChild(docItem);
+    });
+}
+
+function removeImage(type, index) {
+    if (type === 'logo') {
+        uploadedFiles.logo = null;
+        const logoPreview = document.getElementById('logo-preview');
+        const logoInput = document.getElementById('logo-input');
+        if (logoPreview) logoPreview.innerHTML = '';
+        if (logoInput) logoInput.value = '';
+    } else {
+        uploadedFiles[type].splice(index, 1);
+        displayImagePreview(`${type}-preview`, uploadedFiles[type], type);
+    }
+}
+
+function removeDocument(index) {
+    uploadedFiles.documents.splice(index, 1);
+    displayDocumentPreview('document-list', uploadedFiles.documents);
+}
+
+// Drag and drop functionality
+function initializeDragAndDrop() {
+    const uploadAreas = ['logo-upload-area', 'document-upload-area'];
+    
+    uploadAreas.forEach(id => {
+        const area = document.getElementById(id);
+        if (!area) return;
+        
+        area.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            area.classList.add('dragover');
+        });
+
+        area.addEventListener('dragleave', () => {
+            area.classList.remove('dragover');
+        });
+
+        area.addEventListener('drop', (e) => {
+            e.preventDefault();
+            area.classList.remove('dragover');
+            
+            const files = Array.from(e.dataTransfer.files);
+            const input = area.querySelector('input[type="file"]');
+            
+            if (input) {
+                const dt = new DataTransfer();
+                files.forEach(file => dt.items.add(file));
+                input.files = dt.files;
+                
+                input.dispatchEvent(new Event('change'));
+            }
+        });
+    });
+}
+
+// Toast notification function
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type} show`;
+    toast.textContent = message;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 300);
+    }, 3000);
+}
+
+// Updated Payment handling function
+async function handlePayment(applicationId, fullName, email, phone) {
+    try {
+        showToast('Creating payment order...', 'info');
+        
+        const orderResponse = await fetch('http://localhost:4000/api/payments/create-order', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify({ 
+                applicationId: applicationId 
+            })
+        });
+
+        if (!orderResponse.ok) {
+            const errorData = await orderResponse.json();
+            throw new Error(errorData.error || 'Failed to create payment order');
+        }
+
+        const orderData = await orderResponse.json();
+        
+        if (!orderData.success) {
+            throw new Error('Order creation failed');
+        }
+
+        const options = {
+            key: orderData.key,
+            amount: orderData.amount,
+            currency: orderData.currency,
+            name: "PlanningEarth NFC Cards",
+            description: `Payment for ${selectedPlan}`,
+            order_id: orderData.orderId,
+            
+            handler: async function (response) {
+                showToast('Verifying payment...', 'info');
+                
+                try {
+                    const verifyResponse = await fetch('http://localhost:4000/api/payments/verify-payment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            applicationId: applicationId,
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature
+                        })
+                    });
+
+                    const verifyResult = await verifyResponse.json();
+                    
+                    if (verifyResult.success) {
+                        showToast('Payment successful!', 'success');
+                        
+                        const form = document.getElementById('application-form');
+                        form.innerHTML = `
+                            <div class="text-center py-8">
+                                <svg class="mx-auto h-16 w-16 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <h3 class="text-2xl font-bold mt-4 mb-2 text-green-600">Payment Successful!</h3>
+                                <p class="text-gray-600 mb-4">Thank you for your order. We will contact you soon to proceed with your NFC card creation.</p>
+                                <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                                    <p class="text-sm text-gray-600">
+                                        <strong>Order ID:</strong> ${response.razorpay_order_id}<br>
+                                        <strong>Payment ID:</strong> ${response.razorpay_payment_id}
+                                    </p>
+                                </div>
+                                <button type="button" class="btn-primary px-6 py-3 rounded-lg text-white font-semibold" onclick="location.reload()">
+                                    Place Another Order
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        showToast('Payment verification failed! Please contact support.', 'error');
+                        resetSubmitButton();
+                    }
+                } catch (error) {
+                    console.error('Payment verification error:', error);
+                    showToast('Error verifying payment. Please contact support with your payment details.', 'error');
+                    resetSubmitButton();
+                }
+            },
+            
+            modal: {
+                ondismiss: function () {
+                    showToast('Payment cancelled', 'error');
+                    resetSubmitButton();
+                }
+            },
+            
+            prefill: {
+                name: fullName,
+                email: email,
+                contact: phone
+            },
+            
+            theme: {
+                color: "#1e88e5"
+            }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+
+    } catch (error) {
+        console.error('Payment initialization error:', error);
+        showToast(`Payment failed: ${error.message}`, 'error');
+        resetSubmitButton();
+    }
+}
+
+function resetSubmitButton() {
+    const submitBtn = document.getElementById('submit-button');
+    if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Submit Application & Proceed to Payment';
+    }
+}
+
+// FIXED Form submission function
+function initializeFormSubmission() {
+    const form = document.getElementById('application-form');
+    const submitBtn = document.getElementById('submit-button');
+    if (!form || !submitBtn) return;
+
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        // Get selected plan and price from global variables or hidden inputs
+        let currentSelectedPlan = selectedPlan;
+        let currentSelectedPrice = selectedPrice;
+        
+        // Fallback to hidden inputs if global variables are not set
+        if (!currentSelectedPlan) {
+            const planInput = document.getElementById('hidden-selected-plan');
+            const priceInput = document.getElementById('hidden-selected-price');
+            
+            currentSelectedPlan = planInput ? planInput.value : null;
+            currentSelectedPrice = priceInput ? parseFloat(priceInput.value) : null;
+        }
+
+        // Validate plan selection
+        if (!currentSelectedPlan || !currentSelectedPrice) {
+            showToast('Please select a plan before submitting', 'error');
+            document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+            return;
+        }
+
+        console.log(`Submitting with plan: ${currentSelectedPlan} - ₹${currentSelectedPrice}`); // Debug log
+
+        // Validate required fields
+        const requiredFields = document.querySelectorAll('[required]');
+        let isValid = true;
+        let firstErrorField = null;
+
+        requiredFields.forEach(field => {
+            const isEmpty = (field.type === 'checkbox') ? !field.checked : !field.value.trim();
+            if (isEmpty) {
+                isValid = false;
+                field.classList.add('border-red-500');
+                if (!firstErrorField) firstErrorField = field;
+                field.classList.add('animate-shake');
+                setTimeout(() => field.classList.remove('animate-shake'), 500);
+            } else {
+                field.classList.remove('border-red-500');
+            }
+        });
+
+        if (!isValid) {
+            showToast('Please fill in all required fields', 'error');
+            if (firstErrorField) {
+                firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstErrorField.focus();
+            }
+            return;
+        }
+
+        // Disable button & show loading
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg> Submitting...
+        `;
+
+        // Build form data with correct plan and price
+        const formData = {
+            selectedPlan: currentSelectedPlan,
+            price: currentSelectedPrice,
+
+            fullName: document.getElementById('full-name').value.trim(),
+            businessName: document.getElementById('business-name').value.trim(),
+            jobTitle: document.getElementById('job-title')?.value.trim() || '',
+            tagline: document.getElementById('tagline')?.value.trim() || '',
+            bio: document.getElementById('bio')?.value.trim() || '',
+            address: document.getElementById('address')?.value.trim() || '',
+            email: document.getElementById('email').value.trim().toLowerCase(),
+            phone: document.getElementById('phone').value.trim(),
+            whatsappEnabled: document.getElementById('whatsapp-enabled')?.checked,
+            altPhone: document.getElementById('alt-phone')?.value.trim() || '',
+            website: document.getElementById('website')?.value.trim() || '',
+            linkedin: document.getElementById('linkedin')?.value.trim() || '',
+            instagram: document.getElementById('instagram')?.value.trim() || '',
+            facebook: document.getElementById('facebook')?.value.trim() || '',
+            twitter: document.getElementById('twitter')?.value.trim() || '',
+            youtube: document.getElementById('youtube')?.value.trim() || '',
+            otherSocialName: document.getElementById('other-social-name')?.value.trim() || '',
+            otherSocialUrl: document.getElementById('other-social-url')?.value.trim() || '',
+
+            primaryColor: document.getElementById('primary-color-hex')?.value.trim() || '#1e88e5',
+            secondaryColor: document.getElementById('secondary-color-hex')?.value.trim() || '#69db7c',
+            designPreference: document.getElementById('design-preference')?.value || 'modern',
+            industry: document.getElementById('industry')?.value || '',
+
+            sectionsInclude: Array.from(
+                document.querySelectorAll('input[type="checkbox"][id^="section-"]:checked')
+            ).map(cb => cb.id.replace('section-', '')),
+
+            servicesProducts: document.getElementById('services-products')?.value.trim() || '',
+            achievements: document.getElementById('achievements')?.value.trim() || '',
+            primaryCta: document.getElementById('primary-cta')?.value || 'contact',
+            customCta: document.getElementById('custom-cta')?.value.trim() || '',
+            downloadTitle: document.getElementById('download-title')?.value.trim() || '',
+            termsConsent: document.getElementById('terms-consent')?.checked || false,
+            additionalNotes: document.getElementById('additional-notes')?.value.trim() || '',
+
+            razorpayOrderId: null,
+            razorpayPaymentId: null
+        };
+
+        // Submit to backend
+        try {
+            showToast('Submitting application...', 'info');
+            const response = await fetch('http://localhost:4000/api/applications/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(result.message || 'Failed to submit application');
+            }
+
+            showToast('Application submitted successfully! Proceeding to payment...', 'success');
+            submitBtn.innerHTML = `
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg> Processing Payment...
+            `;
+
+            await handlePayment(
+                result.data.id,
+                formData.fullName,
+                formData.email,
+                formData.phone
+            );
+        } catch (err) {
+            console.error('Application submission error:', err);
+            showToast(`Error: ${err.message}`, 'error');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Submit Application & Proceed to Payment';
+        }
+    });
+}
+
+// Load pack prices from API
+async function loadPackPrices() {
+    try {
+        const response = await fetch('http://localhost:4000/api/packs');
+        const data = await response.json();
+
+        if (data.success && data.pack_price) {
+            const prices = data.pack_price;
+
+            if (prices.basic !== undefined) {
+                document.getElementById('starter-price').innerText = `₹${prices.basic}`;
+                // Update the onclick handler for Starter Pack
+                const starterButton = document.querySelector('[onclick*="Starter Pack"]');
+                if (starterButton) {
+                    starterButton.setAttribute('onclick', `selectPlanAndScrollToForm('Starter Pack', ${prices.basic}); return false;`);
+                }
+            }
+
+            if (prices.standard !== undefined) {
+                document.getElementById('entrepreneur-price').innerText = `₹${prices.standard}`;
+                // Update the onclick handler for Entrepreneur Plan
+                const entrepreneurButton = document.querySelector('[onclick*="Entrepreneur Plan"]');
+                if (entrepreneurButton) {
+                    entrepreneurButton.setAttribute('onclick', `selectPlanAndScrollToForm('Entrepreneur Plan', ${prices.standard}); return false;`);
+                }
+            }
+
+            if (prices.premium !== undefined && prices.premium !== 0) {
+                document.getElementById('enterprise-price').innerText = `₹${prices.premium}`;
+                // Update the onclick handler for Enterprise Plan
+                const enterpriseButton = document.querySelector('[onclick*="Enterprise Plan"]');
+                if (enterpriseButton) {
+                    enterpriseButton.setAttribute('onclick', `selectPlanAndScrollToForm('Enterprise Plan', ${prices.premium}); return false;`);
+                }
+            } else {
+                document.getElementById('enterprise-price').innerText = `Coming Soon`;
+            }
+        } else {
+            console.error('pack_price not found in response');
+        }
+    } catch (error) {
+        console.error('Failed to fetch pack prices', error);
+    }
+}
+
+// Initialize everything when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing...');
+    
+    // Initialize all functionality
+    initializeColorPickers();
+    initializeCTAHandling();
+    initializeDragAndDrop();
+    initializeFormSubmission();
+    loadPackPrices();
+    
+    console.log('All JavaScript initialized successfully');
+});
+
+// Fix SVG attributes
+document.querySelectorAll('svg').forEach(svg => {
+    if (svg.getAttribute('width') === 'auto') {
+        svg.setAttribute('width', '100%');
+    }
+    if (svg.getAttribute('height') === 'auto') {
+        svg.setAttribute('height', '100%');
+    }
+});
+    </script>
+</body>
+</html>
