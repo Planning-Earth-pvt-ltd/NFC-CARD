@@ -174,6 +174,39 @@
             background: rgba(239, 68, 68, 1);
         }
         
+        /* Smooth scroll animation */
+        .smooth-scroll-highlight {
+            position: relative;
+        }
+        
+        .smooth-scroll-highlight::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 3px solid var(--primary-blue);
+            border-radius: 12px;
+            opacity: 0;
+            animation: highlight-pulse 2s ease-out;
+        }
+        
+        @keyframes highlight-pulse {
+            0% {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.02);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1);
+            }
+        }
+        
         @media (max-width: 640px) {
             .card-mockup {
                 transform: scale(0.8);
@@ -309,7 +342,7 @@
                         Seamlessly share contacts & showcase your business with one tap. Revolutionize connections.
                     </h2>
                     <div class="hero-cta">
-                        <a href="#apply" class="btn-primary inline-block px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 rounded-lg text-white font-semibold text-base sm:text-lg" onclick="scrollToForm(); return false;">
+                        <a href="#pricing" class="btn-primary inline-block px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 rounded-lg text-white font-semibold text-base sm:text-lg" onclick="scrollToPricing(); return false;">
                             Apply for Your Custom Card
                         </a>
                     </div>
@@ -410,141 +443,137 @@
         </div>
     </section>
 
-        <section id="pricing" class="py-8 sm:py-12 md:py-16 lg:py-24 bg-[#f8faff]">
-            <div class="container mx-auto px-4 md:px-6">
-                <h2 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-8 sm:mb-10 md:mb-16 text-[#1e88e5]">
-                    Choose Your Smart Card Plan
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-stretch justify-items-center">
-                    <div class="pricing-card bg-white rounded-xl p-5 sm:p-6 md:p-8 shadow-lg border-2 border-[#69db7c] relative w-full max-w-sm">
-                        <div class="absolute top-0 right-0 bg-[#69db7c] text-white px-2 sm:px-3 md:px-4 py-0.5 sm:py-1 rounded-bl-lg rounded-tr-lg text-xs md:text-sm font-medium">
-                            POPULAR
-                        </div>
-                        <div class="pricing-content-area">
-                            <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-2 text-[#1e88e5]">Starter Pack</h3>
-                            <div class="flex items-end mb-4 sm:mb-6">
-                                <span id="starter-price" class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1e88e5]">₹...</span>
-
-                                <span class="text-gray-500 ml-1 mb-1 text-base sm:text-lg md:text-xl">one-time</span>
-                                <span class="text-gray-500 ml-1 mb-1 inline-block scale-[0.6] origin-left">  (incl. taxes)</span>
-                                
-                            </div>
-                            <ul class="mb-5 sm:mb-6 md:mb-8 space-y-1.5 sm:space-y-2 md:space-y-3">
-                                <li class="flex items-start">
-                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <span class="text-sm md:text-base">1 Custom NFC Business Card</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <span class="text-sm md:text-base">Personalized Business Landing Page</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <span class="text-sm md:text-base">Contact Data Integration (VCF)</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <span class="text-sm md:text-base">Professional Design & Encoding</span>
-                                </li>
-                            </ul>
-                        </div>
-                        <a href="#apply" class="btn-primary block text-center px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg text-white font-semibold text-sm md:text-base" onclick="selectPlanAndScrollToForm('Starter Pack', 699); return false;">
-                            Select Starter Pack
-                        </a>
+    <section id="pricing" class="py-8 sm:py-12 md:py-16 lg:py-24 bg-[#f8faff]">
+        <div class="container mx-auto px-4 md:px-6">
+            <h2 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-8 sm:mb-10 md:mb-16 text-[#1e88e5]">
+                Choose Your Smart Card Plan
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-stretch justify-items-center">
+                <div class="pricing-card bg-white rounded-xl p-5 sm:p-6 md:p-8 shadow-lg border-2 border-[#69db7c] relative w-full max-w-sm">
+                    <div class="absolute top-0 right-0 bg-[#69db7c] text-white px-2 sm:px-3 md:px-4 py-0.5 sm:py-1 rounded-bl-lg rounded-tr-lg text-xs md:text-sm font-medium">
+                        POPULAR
                     </div>
-                    
-                    <div class="pricing-card bg-white rounded-xl p-5 sm:p-6 md:p-8 shadow-lg border-2 border-[#1e88e5] relative w-full max-w-sm">
-                        <div class="pricing-content-area">
-                            <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-2 text-[#1e88e5]">Entrepreneur Plan</h3>
-                            <div class="flex items-end mb-4 sm:mb-6">
-                                <span id="entrepreneur-price" class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1e88e5]">₹...</span>
-
-                                <span class="text-gray-500 ml-1 mb-1.5 text-3xl sm:text-sl md:text-base">per month</span>
-                                <span class="text-gray-500 ml-1 mb-1 inline-block scale-[0.6] origin-left"> (incl. taxes)</span>
-                            </div>
-                            <ul class="mb-5 sm:mb-6 md:mb-8 space-y-1.5 sm:space-y-2 md:space-y-3">
-                                <li class="flex items-start">
-                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <span class="text-sm md:text-base">All Starter Pack Features</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <span class="text-sm md:text-base">Company CRM Software Subscription</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <span class="text-sm md:text-base">Personalized Digital Catalog</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"width="auto" height="auto">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <span class="text-sm md:text-base">Personalized Landing Page (Excl. Domain/Hosting)</span>
-                                </li>
-                            </ul>
+                    <div class="pricing-content-area">
+                        <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-2 text-[#1e88e5]">Starter Pack</h3>
+                        <div class="flex items-end mb-4 sm:mb-6">
+                            <span id="starter-price" class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1e88e5]">₹...</span>
+                            <span class="text-gray-500 ml-1 mb-1 text-base sm:text-lg md:text-xl">one-time</span>
+                            <span class="text-gray-500 ml-1 mb-1 inline-block scale-[0.6] origin-left">  (incl. taxes)</span>
                         </div>
-                        <a href="#apply" class="btn-primary block text-center px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg text-white font-semibold text-sm md:text-base" onclick="selectPlanAndScrollToForm('Entrepreneur Plan', 1499); return false;">
-                            Select Entrepreneur Plan
-                        </a>
+                        <ul class="mb-5 sm:mb-6 md:mb-8 space-y-1.5 sm:space-y-2 md:space-y-3">
+                                <ul class="mb-5 sm:mb-6 md:mb-8 space-y-1.5 sm:space-y-2 md:space-y-3">
+                                        <li class="flex items-start">
+                                            <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                            <span class="text-sm md:text-base">1 Custom NFC Business Card</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                            <span class="text-sm md:text-base">Personalized Business Landing Page</span>
+                                        </li>
+                                        <li class="flex items-start">
+                                            <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                            <span class="text-sm md:text-base">Contact Data Integration (VCF)</span>
+                                        </li>
+                            <li class="flex items-start">
+                                <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span class="text-sm md:text-base">Professional Design & Encoding</span>
+                            </li>
+                        </ul>
                     </div>
-                    
-                    <div class="pricing-card bg-white rounded-xl p-5 sm:p-6 md:p-8 shadow-lg border border-gray-200 w-full max-w-sm">
-                        <div class="pricing-content-area">
-                            <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-2 text-[#1e88e5]">Enterprise Pack</h3>
-                            <div class="flex items-end mb-4 sm:mb-6">
-                                <span id="enterprise-price" class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1e88e5]">₹...</span>
-
-                                <span class="text-gray-500 ml-1 mb-1 text-xs sm:text-sm md:text-base">one-time</span>
-
-                            </div>
-                            <ul class="mb-5 sm:mb-6 md:mb-8 space-y-1.5 sm:space-y-2 md:space-y-3 text-gray-400">
-                                <li class="flex items-start">
-                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <span class="text-sm md:text-base">Coming Soon</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <span class="text-sm md:text-base">Coming Soon</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <span class="text-sm md:text-base">Coming Soon</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    <span class="text-sm md:text-base">Coming Soon</span>
-                                </li>
-                            </ul>
+                    <a href="#apply" class="btn-primary block text-center px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg text-white font-semibold text-sm md:text-base" onclick="selectPlanAndScrollToForm('Starter Pack', 699); return false;">
+                        Select Starter Pack
+                    </a>
+                </div>
+                
+                <div class="pricing-card bg-white rounded-xl p-5 sm:p-6 md:p-8 shadow-lg border-2 border-[#1e88e5] relative w-full max-w-sm">
+                    <div class="pricing-content-area">
+                        <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-2 text-[#1e88e5]">Entrepreneur Plan</h3>
+                        <div class="flex items-end mb-4 sm:mb-6">
+                            <span id="entrepreneur-price" class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1e88e5]">₹...</span>
+                            <span class="text-gray-500 ml-1 mb-1.5 text-3xl sm:text-sl md:text-base">per month</span>
+                            <span class="text-gray-500 ml-1 mb-1 inline-block scale-[0.6] origin-left"> (incl. taxes)</span>
                         </div>
-                        <button class="block w-full px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg bg-gray-200 text-gray-500 font-semibold text-sm md:text-base cursor-not-allowed" onclick="showToast('Enterprise Pack coming soon!', 'info')">
-                            Coming Soon
-                        </button>
+                        <ul class="mb-5 sm:mb-6 md:mb-8 space-y-1.5 sm:space-y-2 md:space-y-3">
+                            <li class="flex items-start">
+                                <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span class="text-sm md:text-base">All Starter Pack Features</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span class="text-sm md:text-base">Company CRM Software Subscription</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span class="text-sm md:text-base">Personalized Digital Catalog</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-[#69db7c] mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"width="auto" height="auto">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span class="text-sm md:text-base">Personalized Landing Page (Excl. Domain/Hosting)</span>
+                            </li>
+                        </ul>
                     </div>
+                    <a href="#apply" class="btn-primary block text-center px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg text-white font-semibold text-sm md:text-base" onclick="selectPlanAndScrollToForm('Entrepreneur Plan', 1499); return false;">
+                        Select Entrepreneur Plan
+                    </a>
+                </div>
+                
+                <div class="pricing-card bg-white rounded-xl p-5 sm:p-6 md:p-8 shadow-lg border border-gray-200 w-full max-w-sm">
+                    <div class="pricing-content-area">
+                        <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-2 text-[#1e88e5]">Enterprise Pack</h3>
+                        <div class="flex items-end mb-4 sm:mb-6">
+                            <span id="enterprise-price" class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1e88e5]">₹...</span>
+                            <span class="text-gray-500 ml-1 mb-1 text-xs sm:text-sm md:text-base">one-time</span>
+                        </div>
+                        <ul class="mb-5 sm:mb-6 md:mb-8 space-y-1.5 sm:space-y-2 md:space-y-3 text-gray-400">
+                            <li class="flex items-start">
+                                <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span class="text-sm md:text-base">Coming Soon</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span class="text-sm md:text-base">Coming Soon</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span class="text-sm md:text-base">Coming Soon</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 mr-1.5 sm:mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="auto" height="auto">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span class="text-sm md:text-base">Coming Soon</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <button class="block w-full px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg bg-gray-200 text-gray-500 font-semibold text-sm md:text-base cursor-not-allowed" onclick="showToast('Enterprise Pack coming soon!', 'info')">
+                        Coming Soon
+                    </button>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
     <section id="apply" class="py-8 sm:py-12 md:py-16 lg:py-24">
         <div class="container mx-auto px-4 md:px-6 max-w-4xl">
@@ -559,11 +588,11 @@
                 <div id="selected-plan-info" class="hidden mb-6 p-4 bg-[#f0f9ff] rounded-lg border border-[#bae6fd]">
                     <h4 class="font-semibold text-[#1e88e5] mb-2">Selected Plan</h4>
                     <div class="flex justify-between items-center">
-                        <div>
+                          <div>
                             <p id="selected-plan-name" class="font-medium">Starter Pack</p>
                             <p id="selected-plan-price" class="text-gray-600">₹699</p>
                         </div>
-                        <button type="button" class="text-sm text-[#1e88e5] hover:underline" onclick="clearSelectedPlan()">Change</button>
+                        <button type="button" class="text-sm text-[#1e88e5] hover:underline" onclick="clearSelectedPlanAndScrollToPricing()">Change</button>
                     </div>
                 </div>
                 
@@ -724,7 +753,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                             </svg>
                             <p class="mt-2 text-sm text-gray-600">Click to upload your logo or drag and drop</p>
-                            <p class="text-xs text-gray-500">PNG, JPG up to 5MB</p>
+                            <p class="text-xs text-gray-500">PNG, JPG up to 2MB</p>
                         </div>
                         <div id="logo-preview" class="image-preview"></div>
                     </div>
@@ -736,24 +765,24 @@
                     <div class="mb-3 sm:mb-4 md:mb-6">
                         <label class="block text-gray-700 mb-2 sm:mb-3 text-sm md:text-base">Sections to Include</label>
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3">
+                                <div class="flex items-center">
+                                        <input type="checkbox" id="section-about" class="form-checkbox h-4 w-4 text-[#1e88e5]" checked>
+                                        <label for="section-about" class="ml-2 text-xs sm:text-sm text-gray-700">About</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="section-services" class="form-checkbox h-4 w-4 text-[#1e88e5]" checked>
+                                        <label for="section-services" class="ml-2 text-xs sm:text-sm text-gray-700">Services/Products</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="section-portfolio" class="form-checkbox h-4 w-4 text-[#1e88e5]">
+                                        <label for="section-portfolio" class="ml-2 text-xs sm:text-sm text-gray-700">Portfolio/Work</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="section-testimonials" class="form-checkbox h-4 w-4 text-[#1e88e5]">
+                                        <label for="section-testimonials" class="ml-2 text-xs sm:text-sm text-gray-700">Testimonials</label>
+                                    </div>
                             <div class="flex items-center">
                                 <input type="checkbox" id="section-about" class="form-checkbox h-4 w-4 text-[#1e88e5]" checked>
-                                <label for="section-about" class="ml-2 text-xs sm:text-sm text-gray-700">About</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input type="checkbox" id="section-services" class="form-checkbox h-4 w-4 text-[#1e88e5]" checked>
-                                <label for="section-services" class="ml-2 text-xs sm:text-sm text-gray-700">Services/Products</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input type="checkbox" id="section-portfolio" class="form-checkbox h-4 w-4 text-[#1e88e5]">
-                                <label for="section-portfolio" class="ml-2 text-xs sm:text-sm text-gray-700">Portfolio/Work</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input type="checkbox" id="section-testimonials" class="form-checkbox h-4 w-4 text-[#1e88e5]">
-                                <label for="section-testimonials" class="ml-2 text-xs sm:text-sm text-gray-700">Testimonials</label>
-                            </div>
-                            <div class="flex items-center">
-                                <input type="checkbox" id="section-contact" class="form-checkbox h-4 w-4 text-[#1e88e5]" checked>
                                 <label for="section-contact" class="ml-2 text-xs sm:text-sm text-gray-700">Contact Form</label>
                             </div>
                             <div class="flex items-center">
@@ -844,732 +873,766 @@
 
     <script>
     // Global variables for plan selection and file uploads
-let selectedPlan = null;
-let selectedPrice = null;
-let packPrices = { basic: 699, standard: 1499, premium: 0 }; // Fallback prices
-let uploadedFiles = {
-    logo: null,
-    documents: []
-};
+    let selectedPlan = null;
+    let selectedPrice = null;
+    let packPrices = { basic: 699, standard: 1499, premium: 0 }; // Fallback prices
+    let uploadedFiles = {
+        logo: null,
+        documents: []
+    };
 
-// FIXED: Load pack prices with better error handling
-async function loadPackPrices() {
-    try {
-        console.log('Fetching pack prices from:', 'http://localhost:4000/api/applications/packs');
-        
-        const response = await fetch('http://localhost:4000/api/applications/packs', {
-            method: 'GET',
-            headers: { 
-                'Content-Type': 'application/json'
-            }
-        });
-        
-        console.log('Response status:', response.status);
-        
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    // FIXED: Smooth scroll functions with animation
+    function scrollToPricing() {
+        const pricingSection = document.getElementById('pricing');
+        if (pricingSection) {
+            pricingSection.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
+            // Add highlight animation
+            setTimeout(() => {
+                pricingSection.classList.add('smooth-scroll-highlight');
+                setTimeout(() => {
+                    pricingSection.classList.remove('smooth-scroll-highlight');
+                }, 2000);
+            }, 500);
         }
-        
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-            const text = await response.text();
-            console.error('Non-JSON response:', text.substring(0, 200));
-            throw new Error('Server returned HTML instead of JSON - check your API endpoint');
-        }
-        
-        const data = await response.json();
-        console.log('Received pack data:', data);
+    }
 
-        if (data.success && data.pack_price) {
-            packPrices = data.pack_price;
-            console.log('Updated pack prices:', packPrices);
+    function scrollToForm() {
+        const formSection = document.getElementById('apply');
+        if (formSection) {
+            formSection.scrollIntoView({ 
+                behavior: 'smooth'
+            });
+            // Add highlight animation to form
+            setTimeout(() => {
+                const form = document.getElementById('application-form');
+                if (form) {
+                    form.classList.add('');
+                    setTimeout(() => {
+                        form.classList.remove('');
+                    }, 2000);
+                }
+            }, 500);
+        }
+    }
+
+    // FIXED: Clear selected plan and scroll back to pricing with animation
+    function clearSelectedPlanAndScrollToPricing() {
+        selectedPlan = null;
+        selectedPrice = null;
+        const planInfoEl = document.getElementById('selected-plan-info');
+        if (planInfoEl) planInfoEl.classList.add('hidden');
+        
+        // Remove hidden inputs
+        const form = document.getElementById('application-form');
+        if (form) {
+            const existingInputs = form.querySelectorAll('input[name^="selected"]');
+            existingInputs.forEach(input => input.remove());
+        }
+
+        // Show toast and scroll to pricing
+        showToast('Plan selection cleared. Choose a new plan below.', 'info');
+        scrollToPricing();
+    }
+
+    // FIXED: Load pack prices with better error handling
+    async function loadPackPrices() {
+        try {
+            console.log('Fetching pack prices from:', 'http://localhost:4000/api/applications/packs');
             
-            // Update price display
+            const response = await fetch('http://localhost:4000/api/applications/packs', {
+                method: 'GET',
+                headers: { 
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            console.log('Response status:', response.status);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                const text = await response.text();
+                console.error('Non-JSON response:', text.substring(0, 200));
+                throw new Error('Server returned HTML instead of JSON - check your API endpoint');
+            }
+            
+            const data = await response.json();
+            console.log('Received pack data:', data);
+
+            if (data.success && data.pack_price) {
+                packPrices = data.pack_price;
+                console.log('Updated pack prices:', packPrices);
+                
+                // Update price display
+                updatePriceDisplay();
+                updateButtonHandlers();
+            } else {
+                console.warn('pack_price not found in response, using fallback prices');
+            }
+        } catch (error) {
+            console.error('Failed to fetch pack prices:', error);
+            console.log('Using fallback prices:', packPrices);
+            
+            // Still update the UI with fallback prices
             updatePriceDisplay();
             updateButtonHandlers();
-        } else {
-            console.warn('pack_price not found in response, using fallback prices');
         }
-    } catch (error) {
-        console.error('Failed to fetch pack prices:', error);
-        console.log('Using fallback prices:', packPrices);
+    }
+
+    // Update price display in UI
+    function updatePriceDisplay() {
+        const starterPrice = document.getElementById('starter-price');
+        const entrepreneurPrice = document.getElementById('entrepreneur-price');
+        const enterprisePrice = document.getElementById('enterprise-price');
         
-        // Still update the UI with fallback prices
-        updatePriceDisplay();
-        updateButtonHandlers();
+        if (starterPrice) starterPrice.innerText = `₹${packPrices.basic}`;
+        if (entrepreneurPrice) entrepreneurPrice.innerText = `₹${packPrices.standard}`;
+        if (enterprisePrice && packPrices.premium !== 0) {
+            enterprisePrice.innerText = `₹${packPrices.premium}`;
+        }
     }
-}
 
-// Update price display in UI
-function updatePriceDisplay() {
-    const starterPrice = document.getElementById('starter-price');
-    const entrepreneurPrice = document.getElementById('entrepreneur-price');
-    const enterprisePrice = document.getElementById('enterprise-price');
-    
-    if (starterPrice) starterPrice.innerText = `₹${packPrices.basic}`;
-    if (entrepreneurPrice) entrepreneurPrice.innerText = `₹${packPrices.standard}`;
-    if (enterprisePrice && packPrices.premium !== 0) {
-        enterprisePrice.innerText = `₹${packPrices.premium}`;
+    // Update button onclick handlers with correct prices
+    function updateButtonHandlers() {
+        const starterBtn = document.querySelector('a[href="#apply"]:contains("Starter")') || 
+                         document.querySelector('[onclick*="Starter"]');
+        const entrepreneurBtn = document.querySelector('a[href="#apply"]:contains("Entrepreneur")') || 
+                              document.querySelector('[onclick*="Entrepreneur"]');
+        
+        if (starterBtn) {
+            starterBtn.setAttribute('onclick', `selectPlanAndScrollToForm('Starter Pack', ${packPrices.basic}); return false;`);
+        }
+        if (entrepreneurBtn) {
+            entrepreneurBtn.setAttribute('onclick', `selectPlanAndScrollToForm('Entrepreneur Plan', ${packPrices.standard}); return false;`);
+        }
     }
-}
 
-// Update button onclick handlers with correct prices
-function updateButtonHandlers() {
-    const starterBtn = document.querySelector('a[href="#apply"]:contains("Starter")') || 
-                     document.querySelector('[onclick*="Starter"]');
-    const entrepreneurBtn = document.querySelector('a[href="#apply"]:contains("Entrepreneur")') || 
-                          document.querySelector('[onclick*="Entrepreneur"]');
-    
-    if (starterBtn) {
-        starterBtn.setAttribute('onclick', `selectPlanAndScrollToForm('Starter Pack', ${packPrices.basic}); return false;`);
+    // Plan selection with proper price handling
+    function selectPlanAndScrollToForm(planName, price) {
+        selectedPlan = planName;
+        selectedPrice = price;
+        
+        console.log('Selected plan:', planName, 'Price:', price);
+        
+        // Update the plan info display
+        const planNameEl = document.getElementById('selected-plan-name');
+        const planPriceEl = document.getElementById('selected-plan-price');
+        const planInfoEl = document.getElementById('selected-plan-info');
+        
+        if (planNameEl) planNameEl.textContent = planName;
+        if (planPriceEl) planPriceEl.textContent = `₹${price}`;
+        if (planInfoEl) planInfoEl.classList.remove('hidden');
+        
+        // Add hidden inputs for form submission
+        updateHiddenPlanInputs(planName, price);
+        
+        // Show success message and scroll to form
+        showToast(`${planName} selected! Please fill out the form below.`, 'success');
+        scrollToForm();
     }
-    if (entrepreneurBtn) {
-        entrepreneurBtn.setAttribute('onclick', `selectPlanAndScrollToForm('Entrepreneur Plan', ${packPrices.standard}); return false;`);
-    }
-}
 
-// Plan selection with proper price handling
-function selectPlanAndScrollToForm(planName, price) {
-    selectedPlan = planName;
-    selectedPrice = price;
-    
-    console.log('Selected plan:', planName, 'Price:', price);
-    
-    // Update the plan info display
-    const planNameEl = document.getElementById('selected-plan-name');
-    const planPriceEl = document.getElementById('selected-plan-price');
-    const planInfoEl = document.getElementById('selected-plan-info');
-    
-    if (planNameEl) planNameEl.textContent = planName;
-    if (planPriceEl) planPriceEl.textContent = `₹${price}`;
-    if (planInfoEl) planInfoEl.classList.remove('hidden');
-    
-    // Add hidden inputs for form submission
-    updateHiddenPlanInputs(planName, price);
-    
-    // Scroll to form
-    scrollToForm();
-}
-
-// Add hidden inputs to ensure plan data is submitted
-function updateHiddenPlanInputs(planName, price) {
-    const form = document.getElementById('application-form');
-    if (!form) return;
-    
-    // Remove existing hidden inputs
-    const existingInputs = form.querySelectorAll('input[name^="selected"]');
-    existingInputs.forEach(input => input.remove());
-    
-    // Add new hidden inputs
-    const planInput = document.createElement('input');
-    planInput.type = 'hidden';
-    planInput.name = 'selectedPlan';
-    planInput.value = planName;
-    form.appendChild(planInput);
-    
-    const priceInput = document.createElement('input');
-    priceInput.type = 'hidden';
-    priceInput.name = 'selectedPrice';
-    priceInput.value = price;
-    form.appendChild(priceInput);
-}
-
-function clearSelectedPlan() {
-    selectedPlan = null;
-    selectedPrice = null;
-    const planInfoEl = document.getElementById('selected-plan-info');
-    if (planInfoEl) planInfoEl.classList.add('hidden');
-    
-    // Remove hidden inputs
-    const form = document.getElementById('application-form');
-    if (form) {
+    // Add hidden inputs to ensure plan data is submitted
+    function updateHiddenPlanInputs(planName, price) {
+        const form = document.getElementById('application-form');
+        if (!form) return;
+        
+        // Remove existing hidden inputs
         const existingInputs = form.querySelectorAll('input[name^="selected"]');
         existingInputs.forEach(input => input.remove());
-    }
-}
-
-function scrollToForm() {
-    const formEl = document.getElementById('apply');
-    if (formEl) {
-        formEl.scrollIntoView({ behavior: 'smooth' });
-    }
-}
-
-// Color picker synchronization
-function initializeColorPickers() {
-    const primaryColor = document.getElementById('primary-color');
-    const primaryColorHex = document.getElementById('primary-color-hex');
-    const secondaryColor = document.getElementById('secondary-color');
-    const secondaryColorHex = document.getElementById('secondary-color-hex');
-
-    if (primaryColor && primaryColorHex) {
-        primaryColor.addEventListener('change', function() {
-            primaryColorHex.value = this.value;
-        });
-
-        primaryColorHex.addEventListener('input', function() {
-            if (isValidHex(this.value)) {
-                primaryColor.value = this.value;
-            }
-        });
+        
+        // Add new hidden inputs
+        const planInput = document.createElement('input');
+        planInput.type = 'hidden';
+        planInput.name = 'selectedPlan';
+        planInput.value = planName;
+        form.appendChild(planInput);
+        
+        const priceInput = document.createElement('input');
+        priceInput.type = 'hidden';
+        priceInput.name = 'selectedPrice';
+        priceInput.value = price;
+        form.appendChild(priceInput);
     }
 
-    if (secondaryColor && secondaryColorHex) {
-        secondaryColor.addEventListener('change', function() {
-            secondaryColorHex.value = this.value;
-        });
+    // Color picker synchronization
+    function initializeColorPickers() {
+        const primaryColor = document.getElementById('primary-color');
+        const primaryColorHex = document.getElementById('primary-color-hex');
+        const secondaryColor = document.getElementById('secondary-color');
+        const secondaryColorHex = document.getElementById('secondary-color-hex');
 
-        secondaryColorHex.addEventListener('input', function() {
-            if (isValidHex(this.value)) {
-                secondaryColor.value = this.value;
-            }
-        });
-    }
-}
+        if (primaryColor && primaryColorHex) {
+            primaryColor.addEventListener('change', function() {
+                primaryColorHex.value = this.value;
+            });
 
-function isValidHex(hex) {
-    return /^#([0-9A-F]{3}){1,2}$/i.test(hex);
-}
+            primaryColorHex.addEventListener('input', function() {
+                if (isValidHex(this.value)) {
+                    primaryColor.value = this.value;
+                }
+            });
+        }
 
-// CTA selection handling
-function initializeCTAHandling() {
-    const primaryCta = document.getElementById('primary-cta');
-    const customCtaInput = document.getElementById('custom-cta');
-    
-    if (primaryCta && customCtaInput) {
-        primaryCta.addEventListener('change', function() {
-            if (this.value === 'other') {
-                customCtaInput.classList.remove('hidden');
-                customCtaInput.required = true;
-            } else {
-                customCtaInput.classList.add('hidden');
-                customCtaInput.required = false;
-            }
-        });
-    }
-}
+        if (secondaryColor && secondaryColorHex) {
+            secondaryColor.addEventListener('change', function() {
+                secondaryColorHex.value = this.value;
+            });
 
-// FIXED: File upload functions with proper handling
-function handleLogoUpload(input) {
-    const file = input.files[0];
-    if (file && validateImage(file)) {
-        uploadedFiles.logo = file;
-        displayImagePreview('logo-preview', [file], 'logo');
-        showToast('Logo uploaded successfully', 'success');
-    }
-}
-
-function handleDocumentUpload(input) {
-    const files = Array.from(input.files);
-    if (files.length > 0) {
-        const validFiles = files.filter(file => validateDocument(file));
-        if (validFiles.length > 0) {
-            uploadedFiles.documents = [...uploadedFiles.documents, ...validFiles];
-            displayDocumentPreview('document-list', uploadedFiles.documents);
-            showToast(`${validFiles.length} document(s) uploaded successfully`, 'success');
+            secondaryColorHex.addEventListener('input', function() {
+                if (isValidHex(this.value)) {
+                    secondaryColor.value = this.value;
+                }
+            });
         }
     }
-}
 
-function validateImage(file) {
-    const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-    const maxSize = 5 * 1024 * 1024; // 5MB
-
-    if (!validTypes.includes(file.type)) {
-        showToast('Please upload only JPG or PNG images', 'error');
-        return false;
+    function isValidHex(hex) {
+        return /^#([0-9A-F]{3}){1,2}$/i.test(hex);
     }
 
-    if (file.size > maxSize) {
-        showToast('Image size should be less than 5MB', 'error');
-        return false;
-    }
-
-    return true;
-}
-
-function validateDocument(file) {
-    const validTypes = [
-        'application/pdf', 
-        'application/msword', 
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
-        'image/jpeg', 
-        'image/png',
-        'image/jpg'
-    ];
-    const maxSize = 10 * 1024 * 1024; // 10MB
-
-    if (!validTypes.includes(file.type)) {
-        showToast('Please upload only PDF, DOC, DOCX, JPG, or PNG files', 'error');
-        return false;
-    }
-
-    if (file.size > maxSize) {
-        showToast('File size should be less than 10MB', 'error');
-        return false;
-    }
-
-    return true;
-}
-
-function displayImagePreview(containerId, files, type) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    
-    container.innerHTML = '';
-
-    files.forEach((file, index) => {
-        const imageItem = document.createElement('div');
-        imageItem.className = 'image-item';
-
-        const img = document.createElement('img');
-        img.src = URL.createObjectURL(file);
-        img.alt = file.name;
-
-        const removeBtn = document.createElement('button');
-        removeBtn.className = 'image-remove';
-        removeBtn.innerHTML = '×';
-        removeBtn.onclick = () => removeImage(type, index);
-
-        imageItem.appendChild(img);
-        imageItem.appendChild(removeBtn);
-        container.appendChild(imageItem);
-    });
-}
-
-function displayDocumentPreview(containerId, files) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    
-    container.innerHTML = '';
-
-    files.forEach((file, index) => {
-        const docItem = document.createElement('div');
-        docItem.className = 'flex items-center justify-between bg-gray-50 p-3 rounded-lg mb-2';
-
-        const fileInfo = document.createElement('div');
-        fileInfo.innerHTML = `
-            <p class="text-sm font-medium text-gray-900">${file.name}</p>
-            <p class="text-xs text-gray-500">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
-        `;
-
-        const removeBtn = document.createElement('button');
-        removeBtn.className = 'text-red-600 hover:text-red-800 text-sm';
-        removeBtn.innerHTML = 'Remove';
-        removeBtn.onclick = () => removeDocument(index);
-
-        docItem.appendChild(fileInfo);
-        docItem.appendChild(removeBtn);
-        container.appendChild(docItem);
-    });
-}
-
-function removeImage(type, index) {
-    if (type === 'logo') {
-        uploadedFiles.logo = null;
-        const logoPreview = document.getElementById('logo-preview');
-        const logoInput = document.getElementById('logo-input');
-        if (logoPreview) logoPreview.innerHTML = '';
-        if (logoInput) logoInput.value = '';
-        showToast('Logo removed', 'info');
-    }
-}
-
-function removeDocument(index) {
-    uploadedFiles.documents.splice(index, 1);
-    displayDocumentPreview('document-list', uploadedFiles.documents);
-    showToast('Document removed', 'info');
-}
-
-// Drag and drop functionality
-function initializeDragAndDrop() {
-    const uploadAreas = ['logo-upload-area', 'document-upload-area'];
-    
-    uploadAreas.forEach(id => {
-        const area = document.getElementById(id);
-        if (!area) return;
+    // CTA selection handling
+    function initializeCTAHandling() {
+        const primaryCta = document.getElementById('primary-cta');
+        const customCtaInput = document.getElementById('custom-cta');
         
-        area.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            area.classList.add('dragover');
-        });
+        if (primaryCta && customCtaInput) {
+            primaryCta.addEventListener('change', function() {
+                if (this.value === 'other') {
+                    customCtaInput.classList.remove('hidden');
+                    customCtaInput.required = true;
+                } else {
+                    customCtaInput.classList.add('hidden');
+                    customCtaInput.required = false;
+                }
+            });
+        }
+    }
 
-        area.addEventListener('dragleave', () => {
-            area.classList.remove('dragover');
-        });
+    // FIXED: File upload functions with proper handling
+    function handleLogoUpload(input) {
+        const file = input.files[0];
+        if (file && validateImage(file)) {
+            uploadedFiles.logo = file;
+            displayImagePreview('logo-preview', [file], 'logo');
+            showToast('Logo uploaded successfully', 'success');
+        }
+    }
 
-        area.addEventListener('drop', (e) => {
-            e.preventDefault();
-            area.classList.remove('dragover');
+    function handleDocumentUpload(input) {
+        const files = Array.from(input.files);
+        if (files.length > 0) {
+            const validFiles = files.filter(file => validateDocument(file));
+            if (validFiles.length > 0) {
+                uploadedFiles.documents = [...uploadedFiles.documents, ...validFiles];
+                displayDocumentPreview('document-list', uploadedFiles.documents);
+                showToast(`${validFiles.length} document(s) uploaded successfully`, 'success');
+            }
+        }
+    }
+
+    function validateImage(file) {
+        const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+        const maxSize = 5 * 1024 * 1024; // 5MB
+
+        if (!validTypes.includes(file.type)) {
+            showToast('Please upload only JPG or PNG images', 'error');
+            return false;
+        }
+
+        if (file.size > maxSize) {
+            showToast('Image size should be less than 5MB', 'error');
+            return false;
+        }
+
+        return true;
+    }
+
+    function validateDocument(file) {
+        const validTypes = [
+            'application/pdf', 
+            'application/msword', 
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+            'image/jpeg', 
+            'image/png',
+            'image/jpg'
+        ];
+        const maxSize = 10 * 1024 * 1024; // 10MB
+
+        if (!validTypes.includes(file.type)) {
+            showToast('Please upload only PDF, DOC, DOCX, JPG, or PNG files', 'error');
+            return false;
+        }
+
+        if (file.size > maxSize) {
+            showToast('File size should be less than 10MB', 'error');
+            return false;
+        }
+
+        return true;
+    }
+
+    function displayImagePreview(containerId, files, type) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        container.innerHTML = '';
+
+        files.forEach((file, index) => {
+            const imageItem = document.createElement('div');
+            imageItem.className = 'image-item';
+
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            img.alt = file.name;
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'image-remove';
+            removeBtn.innerHTML = '×';
+            removeBtn.onclick = () => removeImage(type, index);
+
+            imageItem.appendChild(img);
+            imageItem.appendChild(removeBtn);
+            container.appendChild(imageItem);
+        });
+    }
+
+    function displayDocumentPreview(containerId, files) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        container.innerHTML = '';
+
+        files.forEach((file, index) => {
+            const docItem = document.createElement('div');
+            docItem.className = 'flex items-center justify-between bg-gray-50 p-3 rounded-lg mb-2';
+
+            const fileInfo = document.createElement('div');
+            fileInfo.innerHTML = `
+                <p class="text-sm font-medium text-gray-900">${file.name}</p>
+                <p class="text-xs text-gray-500">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+            `;
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'text-red-600 hover:text-red-800 text-sm';
+            removeBtn.innerHTML = 'Remove';
+            removeBtn.onclick = () => removeDocument(index);
+
+            docItem.appendChild(fileInfo);
+            docItem.appendChild(removeBtn);
+            container.appendChild(docItem);
+        });
+    }
+
+    function removeImage(type, index) {
+        if (type === 'logo') {
+            uploadedFiles.logo = null;
+            const logoPreview = document.getElementById('logo-preview');
+            const logoInput = document.getElementById('logo-input');
+            if (logoPreview) logoPreview.innerHTML = '';
+            if (logoInput) logoInput.value = '';
+            showToast('Logo removed', 'info');
+        }
+    }
+
+    function removeDocument(index) {
+        uploadedFiles.documents.splice(index, 1);
+        displayDocumentPreview('document-list', uploadedFiles.documents);
+        showToast('Document removed', 'info');
+    }
+
+    // Drag and drop functionality
+    function initializeDragAndDrop() {
+        const uploadAreas = ['logo-upload-area', 'document-upload-area'];
+        
+        uploadAreas.forEach(id => {
+            const area = document.getElementById(id);
+            if (!area) return;
             
-            const files = Array.from(e.dataTransfer.files);
-            const input = area.querySelector('input[type="file"]');
-            
-            if (input && files.length > 0) {
-                // Create a new DataTransfer object to set files
-                const dt = new DataTransfer();
-                files.forEach(file => dt.items.add(file));
-                input.files = dt.files;
+            area.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                area.classList.add('dragover');
+            });
+
+            area.addEventListener('dragleave', () => {
+                area.classList.remove('dragover');
+            });
+
+            area.addEventListener('drop', (e) => {
+                e.preventDefault();
+                area.classList.remove('dragover');
                 
-                // Trigger the change event
-                const changeEvent = new Event('change', { bubbles: true });
-                input.dispatchEvent(changeEvent);
-            }
-        });
-    });
-}
-
-// Toast notification function
-function showToast(message, type = 'info') {
-    const toast = document.createElement('div');
-    toast.className = `toast ${type} show`;
-    toast.textContent = message;
-    
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => {
-            if (toast.parentNode) {
-                toast.parentNode.removeChild(toast);
-            }
-        }, 300);
-    }, 3000);
-}
-
-// Payment handling function
-async function handlePayment(applicationId, fullName, email, phone) {
-    try {
-        showToast('Creating payment order...', 'info');
-        
-        const orderResponse = await fetch('http://localhost:4000/api/payments/create-order', {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json' 
-            },
-            body: JSON.stringify({ 
-                applicationId: applicationId 
-            })
-        });
-
-        if (!orderResponse.ok) {
-            const errorData = await orderResponse.json();
-            throw new Error(errorData.error || 'Failed to create payment order');
-        }
-
-        const orderData = await orderResponse.json();
-        
-        if (!orderData.success) {
-            throw new Error('Order creation failed');
-        }
-
-        const options = {
-            key: orderData.key,
-            amount: orderData.amount,
-            currency: orderData.currency,
-            name: "PlanningEarth NFC Cards",
-            description: `Payment for ${selectedPlan}`,
-            order_id: orderData.orderId,
-            
-            handler: async function (response) {
-                showToast('Verifying payment...', 'info');
+                const files = Array.from(e.dataTransfer.files);
+                const input = area.querySelector('input[type="file"]');
                 
-                try {
-                    const verifyResponse = await fetch('http://localhost:4000/api/payments/verify-payment', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            applicationId: applicationId,
-                            razorpay_order_id: response.razorpay_order_id,
-                            razorpay_payment_id: response.razorpay_payment_id,
-                            razorpay_signature: response.razorpay_signature
-                        })
-                    });
-
-                    const verifyResult = await verifyResponse.json();
+                if (input && files.length > 0) {
+                    // Create a new DataTransfer object to set files
+                    const dt = new DataTransfer();
+                    files.forEach(file => dt.items.add(file));
+                    input.files = dt.files;
                     
-                    if (verifyResult.success) {
-                        showToast('Payment successful!', 'success');
+                    // Trigger the change event
+                    const changeEvent = new Event('change', { bubbles: true });
+                    input.dispatchEvent(changeEvent);
+                }
+            });
+        });
+    }
+
+    // Toast notification function
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type} show`;
+        toast.textContent = message;
+        
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 300);
+        }, 3000);
+    }
+
+    // Payment handling function
+    async function handlePayment(applicationId, fullName, email, phone) {
+        try {
+            showToast('Creating payment order...', 'info');
+            
+            const orderResponse = await fetch('http://localhost:4000/api/payments/create-order', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json' 
+                },
+                body: JSON.stringify({ 
+                    applicationId: applicationId 
+                })
+            });
+
+            if (!orderResponse.ok) {
+                const errorData = await orderResponse.json();
+                throw new Error(errorData.error || 'Failed to create payment order');
+            }
+
+            const orderData = await orderResponse.json();
+            
+            if (!orderData.success) {
+                throw new Error('Order creation failed');
+            }
+
+            const options = {
+                key: orderData.key,
+                amount: orderData.amount,
+                currency: orderData.currency,
+                name: "PlanningEarth NFC Cards",
+                description: `Payment for ${selectedPlan}`,
+                order_id: orderData.orderId,
+                
+                handler: async function (response) {
+                    showToast('Verifying payment...', 'info');
+                    
+                    try {
+                        const verifyResponse = await fetch('http://localhost:4000/api/payments/verify-payment', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                applicationId: applicationId,
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature
+                            })
+                        });
+
+                        const verifyResult = await verifyResponse.json();
                         
-                        const form = document.getElementById('application-form');
-                        if (form) {
-                            form.innerHTML = `
-                                <div class="text-center py-8">
-                                    <svg class="mx-auto h-16 w-16 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    <h3 class="text-2xl font-bold mt-4 mb-2 text-green-600">Payment Successful!</h3>
-                                    <p class="text-gray-600 mb-4">Thank you for your order. We will contact you soon to proceed with your NFC card creation.</p>
-                                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
-                                        <p class="text-sm text-gray-600">
-                                            <strong>Order ID:</strong> ${response.razorpay_order_id}<br>
-                                            <strong>Payment ID:</strong> ${response.razorpay_payment_id}
-                                        </p>
+                        if (verifyResult.success) {
+                            showToast('Payment successful!', 'success');
+                            
+                            const form = document.getElementById('application-form');
+                            if (form) {
+                                form.innerHTML = `
+                                    <div class="text-center py-8">
+                                        <svg class="mx-auto h-16 w-16 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <h3 class="text-2xl font-bold mt-4 mb-2 text-green-600">Payment Successful!</h3>
+                                        <p class="text-gray-600 mb-4">Thank you for your order. We will contact you soon to proceed with your NFC card creation.</p>
+                                        <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                                            <p class="text-sm text-gray-600">
+                                                <strong>Order ID:</strong> ${response.razorpay_order_id}<br>
+                                                <strong>Payment ID:</strong> ${response.razorpay_payment_id}
+                                            </p>
+                                        </div>
+                                        <button type="button" class="btn-primary px-6 py-3 rounded-lg text-white font-semibold" onclick="location.reload()">
+                                            Place Another Order
+                                        </button>
                                     </div>
-                                    <button type="button" class="btn-primary px-6 py-3 rounded-lg text-white font-semibold" onclick="location.reload()">
-                                        Place Another Order
-                                    </button>
-                                </div>
-                            `;
+                                `;
+                            }
+                        } else {
+                            showToast('Payment verification failed! Please contact support.', 'error');
+                            resetSubmitButton();
                         }
-                    } else {
-                        showToast('Payment verification failed! Please contact support.', 'error');
+                    } catch (error) {
+                        console.error('Payment verification error:', error);
+                        showToast('Error verifying payment. Please contact support with your payment details.', 'error');
                         resetSubmitButton();
                     }
-                } catch (error) {
-                    console.error('Payment verification error:', error);
-                    showToast('Error verifying payment. Please contact support with your payment details.', 'error');
-                    resetSubmitButton();
+                },
+                
+                modal: {
+                    ondismiss: function () {
+                        showToast('Payment cancelled', 'error');
+                        resetSubmitButton();
+                    }
+                },
+                
+                prefill: {
+                    name: fullName,
+                    email: email,
+                    contact: phone
+                },
+                
+                theme: {
+                    color: "#1e88e5"
                 }
-            },
+            };
+
+            const rzp = new Razorpay(options);
+            rzp.open();
+
+        } catch (error) {
+            console.error('Payment initialization error:', error);
+            showToast(`Payment failed: ${error.message}`, 'error');
+            resetSubmitButton();
+        }
+    }
+
+    // Helper function to reset submit button
+    function resetSubmitButton() {
+        const submitBtn = document.getElementById('submit-button');
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Submit Application & Proceed to Payment';
+        }
+    }
+
+    // FIXED: Form submission with proper file upload handling
+    function initializeFormSubmission() {
+        const form = document.getElementById('application-form');
+        const submitBtn = document.getElementById('submit-button');
+        if (!form || !submitBtn) return;
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Get plan and price from hidden inputs or selected values
+            const planInput = document.querySelector('input[name="selectedPlan"]');
+            const priceInput = document.querySelector('input[name="selectedPrice"]');
             
-            modal: {
-                ondismiss: function () {
-                    showToast('Payment cancelled', 'error');
-                    resetSubmitButton();
+            const currentSelectedPlan = planInput?.value || selectedPlan || 'Starter Pack';
+            const currentSelectedPrice = priceInput?.value || selectedPrice;
+
+            // Validate plan selection with proper price mapping
+            if (!currentSelectedPlan) {
+                showToast('Please select a plan before submitting', 'error');
+                scrollToPricing();
+                return;
+            }
+
+            // Ensure price is correctly mapped
+            let finalPrice = currentSelectedPrice;
+            if (!finalPrice) {
+                if (currentSelectedPlan.includes('Starter')) {
+                    finalPrice = packPrices.basic || 699;
+                } else if (currentSelectedPlan.includes('Entrepreneur')) {
+                    finalPrice = packPrices.standard || 1499;
+                } else if (currentSelectedPlan.includes('Enterprise')) {
+                    finalPrice = packPrices.premium || 0;
                 }
-            },
-            
-            prefill: {
-                name: fullName,
-                email: email,
-                contact: phone
-            },
-            
-            theme: {
-                color: "#1e88e5"
             }
-        };
 
-        const rzp = new Razorpay(options);
-        rzp.open();
-
-    } catch (error) {
-        console.error('Payment initialization error:', error);
-        showToast(`Payment failed: ${error.message}`, 'error');
-        resetSubmitButton();
-    }
-}
-
-// Helper function to reset submit button
-function resetSubmitButton() {
-    const submitBtn = document.getElementById('submit-button');
-    if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Submit Application & Proceed to Payment';
-    }
-}
-
-// FIXED: Form submission with proper file upload handling
-function initializeFormSubmission() {
-    const form = document.getElementById('application-form');
-    const submitBtn = document.getElementById('submit-button');
-    if (!form || !submitBtn) return;
-
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-
-        // Get plan and price from hidden inputs or selected values
-        const planInput = document.querySelector('input[name="selectedPlan"]');
-        const priceInput = document.querySelector('input[name="selectedPrice"]');
-        
-        const currentSelectedPlan = planInput?.value || selectedPlan || 'Starter Pack';
-        const currentSelectedPrice = priceInput?.value || selectedPrice;
-
-        // Validate plan selection with proper price mapping
-        if (!currentSelectedPlan) {
-            showToast('Please select a plan before submitting', 'error');
-            const pricingSection = document.getElementById('pricing');
-            if (pricingSection) {
-                pricingSection.scrollIntoView({ behavior: 'smooth' });
-            }
-            return;
-        }
-
-        // Ensure price is correctly mapped
-        let finalPrice = currentSelectedPrice;
-        if (!finalPrice) {
-            if (currentSelectedPlan.includes('Starter')) {
-                finalPrice = packPrices.basic || 699;
-            } else if (currentSelectedPlan.includes('Entrepreneur')) {
-                finalPrice = packPrices.standard || 1499;
-            } else if (currentSelectedPlan.includes('Enterprise')) {
-                finalPrice = packPrices.premium || 0;
-            }
-        }
-
-        console.log('Final submission data:', {
-            selectedPlan: currentSelectedPlan,
-            selectedPrice: finalPrice
-        });
-
-        // Validate required fields
-        const requiredFields = document.querySelectorAll('[required]');
-        let isValid = true;
-        let firstErrorField = null;
-
-        requiredFields.forEach(field => {
-            const isEmpty = (field.type === 'checkbox') ? !field.checked : !field.value.trim();
-            if (isEmpty) {
-                isValid = false;
-                field.classList.add('border-red-500');
-                if (!firstErrorField) firstErrorField = field;
-                field.classList.add('animate-shake');
-                setTimeout(() => field.classList.remove('animate-shake'), 500);
-            } else {
-                field.classList.remove('border-red-500');
-            }
-        });
-
-        if (!isValid) {
-            showToast('Please fill in all required fields', 'error');
-            if (firstErrorField) {
-                firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                firstErrorField.focus();
-            }
-            return;
-        }
-
-        // Disable button & show loading
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = `
-            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg> Submitting...
-        `;
-
-        // FIXED: Create FormData to handle file uploads properly
-        const formData = new FormData();
-
-        // Add all form fields
-        formData.append('selectedPlan', currentSelectedPlan);
-        formData.append('selectedPrice', parseFloat(finalPrice));
-        formData.append('fullName', document.getElementById('full-name').value.trim());
-        formData.append('businessName', document.getElementById('business-name').value.trim());
-        formData.append('jobTitle', document.getElementById('job-title')?.value.trim() || '');
-        formData.append('tagline', document.getElementById('tagline')?.value.trim() || '');
-        formData.append('bio', document.getElementById('bio')?.value.trim() || '');
-        formData.append('address', document.getElementById('address')?.value.trim() || '');
-        formData.append('email', document.getElementById('email').value.trim().toLowerCase());
-        formData.append('phone', document.getElementById('phone').value.trim());
-        formData.append('whatsappEnabled', document.getElementById('whatsapp-enabled')?.checked || false);
-        formData.append('altPhone', document.getElementById('alt-phone')?.value.trim() || '');
-        formData.append('website', document.getElementById('website')?.value.trim() || '');
-        formData.append('linkedin', document.getElementById('linkedin')?.value.trim() || '');
-        formData.append('instagram', document.getElementById('instagram')?.value.trim() || '');
-        formData.append('facebook', document.getElementById('facebook')?.value.trim() || '');
-        formData.append('twitter', document.getElementById('twitter')?.value.trim() || '');
-        formData.append('youtube', document.getElementById('youtube')?.value.trim() || '');
-        formData.append('otherSocialName', document.getElementById('other-social-name')?.value.trim() || '');
-        formData.append('otherSocialUrl', document.getElementById('other-social-url')?.value.trim() || '');
-        formData.append('primaryColor', document.getElementById('primary-color-hex')?.value.trim() || '#1e88e5');
-        formData.append('secondaryColor', document.getElementById('secondary-color-hex')?.value.trim() || '#69db7c');
-        formData.append('designPreference', document.getElementById('design-preference')?.value || 'modern');
-        formData.append('industry', document.getElementById('industry')?.value || '');
-
-        // Add section includes as JSON array
-        const sectionsInclude = Array.from(
-            document.querySelectorAll('input[type="checkbox"][id^="section-"]:checked')
-        ).map(cb => cb.id.replace('section-', ''));
-        formData.append('sectionsInclude', JSON.stringify(sectionsInclude));
-
-        formData.append('servicesProducts', document.getElementById('services-products')?.value.trim() || '');
-        formData.append('achievements', document.getElementById('achievements')?.value.trim() || '');
-        formData.append('primaryCta', document.getElementById('primary-cta')?.value || 'contact');
-        formData.append('customCta', document.getElementById('custom-cta')?.value.trim() || '');
-        formData.append('downloadTitle', document.getElementById('download-title')?.value.trim() || '');
-        formData.append('termsConsent', document.getElementById('terms-consent')?.checked || false);
-        formData.append('additionalNotes', document.getElementById('additional-notes')?.value.trim() || '');
-        formData.append('razorpayOrderId', '');
-        formData.append('razorpayPaymentId', '');
-
-        // FIXED: Add files to FormData
-        if (uploadedFiles.logo) {
-            formData.append('image', uploadedFiles.logo);
-            console.log('Added logo file:', uploadedFiles.logo.name);
-        }
-
-        if (uploadedFiles.documents && uploadedFiles.documents.length > 0) {
-            uploadedFiles.documents.forEach((doc, index) => {
-                formData.append('document', doc);
-                console.log(`Added document ${index + 1}:`, doc.name);
-            });
-        }
-
-        console.log('Submitting FormData with files...');
-
-        // Submit to backend with FormData
-        try {
-            showToast('Submitting application...', 'info');
-            
-            const response = await fetch('http://localhost:4000/api/applications/submit', {
-                method: 'POST',
-                body: formData // Don't set Content-Type header - let browser set it with boundary
+            console.log('Final submission data:', {
+                selectedPlan: currentSelectedPlan,
+                selectedPrice: finalPrice
             });
 
-            const result = await response.json();
+            // Validate required fields
+            const requiredFields = document.querySelectorAll('[required]');
+            let isValid = true;
+            let firstErrorField = null;
 
-            if (!response.ok || !result.success) {
-                throw new Error(result.message || result.error || 'Failed to submit application');
+            requiredFields.forEach(field => {
+                const isEmpty = (field.type === 'checkbox') ? !field.checked : !field.value.trim();
+                if (isEmpty) {
+                    isValid = false;
+                    field.classList.add('border-red-500');
+                    if (!firstErrorField) firstErrorField = field;
+                    field.classList.add('animate-shake');
+                    setTimeout(() => field.classList.remove('animate-shake'), 500);
+                } else {
+                    field.classList.remove('border-red-500');
+                }
+            });
+
+            if (!isValid) {
+                showToast('Please fill in all required fields', 'error');
+                if (firstErrorField) {
+                    firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstErrorField.focus();
+                }
+                return;
             }
 
-            console.log('Application submitted successfully:', result);
-            showToast('Application submitted successfully! Proceeding to payment...', 'success');
-            
+            // Disable button & show loading
+            submitBtn.disabled = true;
             submitBtn.innerHTML = `
                 <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg> Processing Payment...
+                </svg> Submitting...
             `;
 
-            // Proceed to payment
-            await handlePayment(
-                result.data.id,
-                document.getElementById('full-name').value.trim(),
-                document.getElementById('email').value.trim(),
-                document.getElementById('phone').value.trim()
-            );
+            // FIXED: Create FormData to handle file uploads properly
+            const formData = new FormData();
 
-        } catch (err) {
-            console.error('Application submission error:', err);
-            showToast(`Error: ${err.message}`, 'error');
-            resetSubmitButton();
+            // Add all form fields
+            formData.append('selectedPlan', currentSelectedPlan);
+            formData.append('selectedPrice', parseFloat(finalPrice));
+            formData.append('fullName', document.getElementById('full-name').value.trim());
+            formData.append('businessName', document.getElementById('business-name').value.trim());
+            formData.append('jobTitle', document.getElementById('job-title')?.value.trim() || '');
+            formData.append('tagline', document.getElementById('tagline')?.value.trim() || '');
+            formData.append('bio', document.getElementById('bio')?.value.trim() || '');
+            formData.append('address', document.getElementById('address')?.value.trim() || '');
+            formData.append('email', document.getElementById('email').value.trim().toLowerCase());
+            formData.append('phone', document.getElementById('phone').value.trim());
+            formData.append('whatsappEnabled', document.getElementById('whatsapp-enabled')?.checked || false);
+            formData.append('altPhone', document.getElementById('alt-phone')?.value.trim() || '');
+            formData.append('website', document.getElementById('website')?.value.trim() || '');
+            formData.append('linkedin', document.getElementById('linkedin')?.value.trim() || '');
+            formData.append('instagram', document.getElementById('instagram')?.value.trim() || '');
+            formData.append('facebook', document.getElementById('facebook')?.value.trim() || '');
+            formData.append('twitter', document.getElementById('twitter')?.value.trim() || '');
+            formData.append('youtube', document.getElementById('youtube')?.value.trim() || '');
+            formData.append('otherSocialName', document.getElementById('other-social-name')?.value.trim() || '');
+            formData.append('otherSocialUrl', document.getElementById('other-social-url')?.value.trim() || '');
+            formData.append('primaryColor', document.getElementById('primary-color-hex')?.value.trim() || '#1e88e5');
+            formData.append('secondaryColor', document.getElementById('secondary-color-hex')?.value.trim() || '#69db7c');
+            formData.append('designPreference', document.getElementById('design-preference')?.value || 'modern');
+            formData.append('industry', document.getElementById('industry')?.value || '');
+
+            // Add section includes as JSON array
+            const sectionsInclude = Array.from(
+                document.querySelectorAll('input[type="checkbox"][id^="section-"]:checked')
+            ).map(cb => cb.id.replace('section-', ''));
+            formData.append('sectionsInclude', JSON.stringify(sectionsInclude));
+
+            formData.append('servicesProducts', document.getElementById('services-products')?.value.trim() || '');
+            formData.append('achievements', document.getElementById('achievements')?.value.trim() || '');
+            formData.append('primaryCta', document.getElementById('primary-cta')?.value || 'contact');
+            formData.append('customCta', document.getElementById('custom-cta')?.value.trim() || '');
+            formData.append('downloadTitle', document.getElementById('download-title')?.value.trim() || '');
+            formData.append('termsConsent', document.getElementById('terms-consent')?.checked || false);
+            formData.append('additionalNotes', document.getElementById('additional-notes')?.value.trim() || '');
+            formData.append('razorpayOrderId', '');
+            formData.append('razorpayPaymentId', '');
+
+            // FIXED: Add files to FormData
+            if (uploadedFiles.logo) {
+                formData.append('image', uploadedFiles.logo);
+                console.log('Added logo file:', uploadedFiles.logo.name);
+            }
+
+            if (uploadedFiles.documents && uploadedFiles.documents.length > 0) {
+                uploadedFiles.documents.forEach((doc, index) => {
+                    formData.append('document', doc);
+                    console.log(`Added document ${index + 1}:`, doc.name);
+                });
+            }
+
+            console.log('Submitting FormData with files...');
+
+            // Submit to backend with FormData
+            try {
+                showToast('Submitting application...', 'info');
+                
+                const response = await fetch('http://localhost:4000/api/applications/submit', {
+                    method: 'POST',
+                    body: formData // Don't set Content-Type header - let browser set it with boundary
+                });
+
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    throw new Error(result.message || result.error || 'Failed to submit application');
+                }
+
+                console.log('Application submitted successfully:', result);
+                showToast('Application submitted successfully! Proceeding to payment...', 'success');
+                
+                submitBtn.innerHTML = `
+                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg> Processing Payment...
+                `;
+
+                // Proceed to payment
+                await handlePayment(
+                    result.data.id,
+                    document.getElementById('full-name').value.trim(),
+                    document.getElementById('email').value.trim(),
+                    document.getElementById('phone').value.trim()
+                );
+
+            } catch (err) {
+                console.error('Application submission error:', err);
+                showToast(`Error: ${err.message}`, 'error');
+                resetSubmitButton();
+            }
+        });
+    }
+
+    // Initialize everything when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded, initializing...');
+        
+        // Load prices first, then initialize everything else
+        loadPackPrices().then(() => {
+            initializeColorPickers();
+            initializeCTAHandling();
+            initializeDragAndDrop();
+            initializeFormSubmission();
+            
+            console.log('All JavaScript initialized successfully');
+        }).catch(error => {
+            console.error('Error during initialization:', error);
+            // Initialize other functions even if price loading fails
+            initializeColorPickers();
+            initializeCTAHandling();
+            initializeDragAndDrop();
+            initializeFormSubmission();
+        });
+    });
+
+    // Call when window loads as backup
+    window.addEventListener('load', function() {
+        if (Object.keys(packPrices).length === 3 && packPrices.basic === 699) {
+            // Only reload if we still have fallback prices
+            loadPackPrices();
         }
     });
-}
-
-// Initialize everything when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded, initializing...');
-    
-    // Load prices first, then initialize everything else
-    loadPackPrices().then(() => {
-        initializeColorPickers();
-        initializeCTAHandling();
-        initializeDragAndDrop();
-        initializeFormSubmission();
-        
-        console.log('All JavaScript initialized successfully');
-    }).catch(error => {
-        console.error('Error during initialization:', error);
-        // Initialize other functions even if price loading fails
-        initializeColorPickers();
-        initializeCTAHandling();
-        initializeDragAndDrop();
-        initializeFormSubmission();
-    });
-});
-
-// Call when window loads as backup
-window.addEventListener('load', function() {
-    if (Object.keys(packPrices).length === 3 && packPrices.basic === 699) {
-        // Only reload if we still have fallback prices
-        loadPackPrices();
-    }
-});  </script>
+    </script>
 </body>
 </html>
