@@ -309,7 +309,7 @@
                         Seamlessly share contacts & showcase your business with one tap. Revolutionize connections.
                     </h2>
                     <div class="hero-cta">
-                        <a href="#apply" class="btn-primary inline-block px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 rounded-lg text-white font-semibold text-base sm:text-lg" onclick="scrollToForm(); return false;">
+                        <a href="#pricing" class="btn-primary inline-block px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 rounded-lg text-white font-semibold text-base sm:text-lg" onclick="scrollToPricing(); return false;">
                             Apply for Your Custom Card
                         </a>
                     </div>
@@ -423,11 +423,9 @@
                         <div class="pricing-content-area">
                             <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-2 text-[#1e88e5]">Starter Pack</h3>
                             <div class="flex items-end mb-4 sm:mb-6">
-                                <span id="starter-price" class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1e88e5]">₹...</span>
-
+                                <span id="starter-price" class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1e88e5]">₹699</span>
                                 <span class="text-gray-500 ml-1 mb-1 text-base sm:text-lg md:text-xl">one-time</span>
                                 <span class="text-gray-500 ml-1 mb-1 inline-block scale-[0.6] origin-left">  (incl. taxes)</span>
-                                
                             </div>
                             <ul class="mb-5 sm:mb-6 md:mb-8 space-y-1.5 sm:space-y-2 md:space-y-3">
                                 <li class="flex items-start">
@@ -456,7 +454,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <a href="#apply" class="btn-primary block text-center px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg text-white font-semibold text-sm md:text-base" onclick="selectPlanAndScrollToForm('Starter Pack', 699); return false;">
+                        <a href="#application-form" class="btn-primary block text-center px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg text-white font-semibold text-sm md:text-base" onclick="selectPlanAndScrollToForm('Starter Pack', 699); return false;">
                             Select Starter Pack
                         </a>
                     </div>
@@ -465,9 +463,8 @@
                         <div class="pricing-content-area">
                             <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-2 text-[#1e88e5]">Entrepreneur Plan</h3>
                             <div class="flex items-end mb-4 sm:mb-6">
-                                <span id="entrepreneur-price" class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1e88e5]">₹...</span>
-
-                                <span class="text-gray-500 ml-1 mb-1.5 text-3xl sm:text-sl md:text-base">per month</span>
+                                <span id="entrepreneur-price" class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1e88e5]">₹1499</span>
+                                <span class="text-gray-500 ml-1 mb-1.5 text-sm md:text-base">per month</span>
                                 <span class="text-gray-500 ml-1 mb-1 inline-block scale-[0.6] origin-left"> (incl. taxes)</span>
                             </div>
                             <ul class="mb-5 sm:mb-6 md:mb-8 space-y-1.5 sm:space-y-2 md:space-y-3">
@@ -497,7 +494,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <a href="#apply" class="btn-primary block text-center px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg text-white font-semibold text-sm md:text-base" onclick="selectPlanAndScrollToForm('Entrepreneur Plan', 1499); return false;">
+                        <a href="#application-form" class="btn-primary block text-center px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-lg text-white font-semibold text-sm md:text-base" onclick="selectPlanAndScrollToForm('Entrepreneur Plan', 1499); return false;">
                             Select Entrepreneur Plan
                         </a>
                     </div>
@@ -507,9 +504,7 @@
                             <h3 class="text-lg sm:text-xl md:text-2xl font-bold mb-2 text-[#1e88e5]">Enterprise Pack</h3>
                             <div class="flex items-end mb-4 sm:mb-6">
                                 <span id="enterprise-price" class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1e88e5]">₹...</span>
-
                                 <span class="text-gray-500 ml-1 mb-1 text-xs sm:text-sm md:text-base">one-time</span>
-
                             </div>
                             <ul class="mb-5 sm:mb-6 md:mb-8 space-y-1.5 sm:space-y-2 md:space-y-3 text-gray-400">
                                 <li class="flex items-start">
@@ -546,7 +541,7 @@
             </div>
         </section>
 
-    <section id="apply" class="py-8 sm:py-12 md:py-16 lg:py-24">
+    <section id="application-form" class="py-8 sm:py-12 md:py-16 lg:py-24">
         <div class="container mx-auto px-4 md:px-6 max-w-4xl">
             <h2 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-3 sm:mb-4 md:mb-6 text-[#1e88e5]">
                 Apply for Your Custom NFC Card & Digital Profile
@@ -555,7 +550,7 @@
                 Fill out the form below with your details. Our team will use this information to create your personalized NFC card and business profile page.
             </p>
             
-            <form id="application-form" class="bg-white rounded-xl p-4 sm:p-6 md:p-8 shadow-lg border border-gray-100">
+            <form id="nfc-application-form" class="bg-white rounded-xl p-4 sm:p-6 md:p-8 shadow-lg border border-gray-100">
                 <div id="selected-plan-info" class="hidden mb-6 p-4 bg-[#f0f9ff] rounded-lg border border-[#bae6fd]">
                     <h4 class="font-semibold text-[#1e88e5] mb-2">Selected Plan</h4>
                     <div class="flex justify-between items-center">
@@ -843,7 +838,7 @@
     <div id="toast-container"></div>
 
     <script>
-    // Global variables for plan selection and file uploads
+// Global variables for plan selection and file uploads
 let selectedPlan = null;
 let selectedPrice = null;
 let packPrices = { basic: 699, standard: 1499, premium: 0 }; // Fallback prices
@@ -852,12 +847,91 @@ let uploadedFiles = {
     documents: []
 };
 
+// FIXED: Smooth scrolling functions
+function scrollToPricing() {
+    document.getElementById('pricing').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+}
+
+function scrollToForm() {
+    document.getElementById('application-form').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+}
+
+// FIXED: Plan selection with smooth scrolling
+function selectPlanAndScrollToForm(planName, price) {
+    selectedPlan = planName;
+    selectedPrice = price;
+    
+    console.log('Selected plan:', planName, 'Price:', price);
+    
+    // Update the plan info display
+    const planNameEl = document.getElementById('selected-plan-name');
+    const planPriceEl = document.getElementById('selected-plan-price');
+    const planInfoEl = document.getElementById('selected-plan-info');
+    
+    if (planNameEl) planNameEl.textContent = planName;
+    if (planPriceEl) planPriceEl.textContent = `₹${price}`;
+    if (planInfoEl) planInfoEl.classList.remove('hidden');
+    
+    // Add hidden inputs for form submission
+    updateHiddenPlanInputs(planName, price);
+    
+    // Scroll to form smoothly
+    scrollToForm();
+}
+
+// FIXED: Clear plan selection and scroll back to pricing
+function clearSelectedPlan() {
+    selectedPlan = null;
+    selectedPrice = null;
+    const planInfoEl = document.getElementById('selected-plan-info');
+    if (planInfoEl) planInfoEl.classList.add('hidden');
+    
+    // Remove hidden inputs
+    const form = document.getElementById('nfc-application-form');
+    if (form) {
+        const existingInputs = form.querySelectorAll('input[name^="selected"]');
+        existingInputs.forEach(input => input.remove());
+    }
+    
+    // Scroll back to pricing section
+    scrollToPricing();
+}
+
+// Add hidden inputs to ensure plan data is submitted
+function updateHiddenPlanInputs(planName, price) {
+    const form = document.getElementById('nfc-application-form');
+    if (!form) return;
+    
+    // Remove existing hidden inputs
+    const existingInputs = form.querySelectorAll('input[name^="selected"]');
+    existingInputs.forEach(input => input.remove());
+    
+    // Add new hidden inputs
+    const planInput = document.createElement('input');
+    planInput.type = 'hidden';
+    planInput.name = 'selectedPlan';
+    planInput.value = planName;
+    form.appendChild(planInput);
+    
+    const priceInput = document.createElement('input');
+    priceInput.type = 'hidden';
+    priceInput.name = 'selectedPrice';
+    priceInput.value = price;
+    form.appendChild(priceInput);
+}
+
 // FIXED: Load pack prices with better error handling
 async function loadPackPrices() {
     try {
-        console.log('Fetching pack prices from:', 'http://localhost:4000/api/applications/packs');
+        console.log('Fetching pack prices from:', 'http://54.157.97.158:4000/api/applications/packs');
         
-        const response = await fetch('http://localhost:4000/api/applications/packs', {
+        const response = await fetch('http://54.157.97.158:4000/api/applications/packs', {
             method: 'GET',
             headers: { 
                 'Content-Type': 'application/json'
@@ -915,83 +989,14 @@ function updatePriceDisplay() {
 
 // Update button onclick handlers with correct prices
 function updateButtonHandlers() {
-    const starterBtn = document.querySelector('a[href="#apply"]:contains("Starter")') || 
-                     document.querySelector('[onclick*="Starter"]');
-    const entrepreneurBtn = document.querySelector('a[href="#apply"]:contains("Entrepreneur")') || 
-                          document.querySelector('[onclick*="Entrepreneur"]');
+    const starterBtn = document.querySelector('a[onclick*="Starter"]');
+    const entrepreneurBtn = document.querySelector('a[onclick*="Entrepreneur"]');
     
     if (starterBtn) {
         starterBtn.setAttribute('onclick', `selectPlanAndScrollToForm('Starter Pack', ${packPrices.basic}); return false;`);
     }
     if (entrepreneurBtn) {
         entrepreneurBtn.setAttribute('onclick', `selectPlanAndScrollToForm('Entrepreneur Plan', ${packPrices.standard}); return false;`);
-    }
-}
-
-// Plan selection with proper price handling
-function selectPlanAndScrollToForm(planName, price) {
-    selectedPlan = planName;
-    selectedPrice = price;
-    
-    console.log('Selected plan:', planName, 'Price:', price);
-    
-    // Update the plan info display
-    const planNameEl = document.getElementById('selected-plan-name');
-    const planPriceEl = document.getElementById('selected-plan-price');
-    const planInfoEl = document.getElementById('selected-plan-info');
-    
-    if (planNameEl) planNameEl.textContent = planName;
-    if (planPriceEl) planPriceEl.textContent = `₹${price}`;
-    if (planInfoEl) planInfoEl.classList.remove('hidden');
-    
-    // Add hidden inputs for form submission
-    updateHiddenPlanInputs(planName, price);
-    
-    // Scroll to form
-    scrollToForm();
-}
-
-// Add hidden inputs to ensure plan data is submitted
-function updateHiddenPlanInputs(planName, price) {
-    const form = document.getElementById('application-form');
-    if (!form) return;
-    
-    // Remove existing hidden inputs
-    const existingInputs = form.querySelectorAll('input[name^="selected"]');
-    existingInputs.forEach(input => input.remove());
-    
-    // Add new hidden inputs
-    const planInput = document.createElement('input');
-    planInput.type = 'hidden';
-    planInput.name = 'selectedPlan';
-    planInput.value = planName;
-    form.appendChild(planInput);
-    
-    const priceInput = document.createElement('input');
-    priceInput.type = 'hidden';
-    priceInput.name = 'selectedPrice';
-    priceInput.value = price;
-    form.appendChild(priceInput);
-}
-
-function clearSelectedPlan() {
-    selectedPlan = null;
-    selectedPrice = null;
-    const planInfoEl = document.getElementById('selected-plan-info');
-    if (planInfoEl) planInfoEl.classList.add('hidden');
-    
-    // Remove hidden inputs
-    const form = document.getElementById('application-form');
-    if (form) {
-        const existingInputs = form.querySelectorAll('input[name^="selected"]');
-        existingInputs.forEach(input => input.remove());
-    }
-}
-
-function scrollToForm() {
-    const formEl = document.getElementById('apply');
-    if (formEl) {
-        formEl.scrollIntoView({ behavior: 'smooth' });
     }
 }
 
@@ -1242,7 +1247,7 @@ async function handlePayment(applicationId, fullName, email, phone) {
     try {
         showToast('Creating payment order...', 'info');
         
-        const orderResponse = await fetch('http://localhost:4000/api/payments/create-order', {
+        const orderResponse = await fetch('http://54.157.97.158:4000/api/payments/create-order', {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json' 
@@ -1275,7 +1280,7 @@ async function handlePayment(applicationId, fullName, email, phone) {
                 showToast('Verifying payment...', 'info');
                 
                 try {
-                    const verifyResponse = await fetch('http://localhost:4000/api/payments/verify-payment', {
+                    const verifyResponse = await fetch('http://54.157.97.158:4000/api/payments/verify-payment', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -1293,7 +1298,7 @@ async function handlePayment(applicationId, fullName, email, phone) {
                     if (verifyResult.success) {
                         showToast('Payment successful!', 'success');
                         
-                        const form = document.getElementById('application-form');
+                        const form = document.getElementById('nfc-application-form');
                         if (form) {
                             form.innerHTML = `
                                 <div class="text-center py-8">
@@ -1364,7 +1369,7 @@ function resetSubmitButton() {
 
 // FIXED: Form submission with proper file upload handling
 function initializeFormSubmission() {
-    const form = document.getElementById('application-form');
+    const form = document.getElementById('nfc-application-form');
     const submitBtn = document.getElementById('submit-button');
     if (!form || !submitBtn) return;
 
@@ -1381,10 +1386,7 @@ function initializeFormSubmission() {
         // Validate plan selection with proper price mapping
         if (!currentSelectedPlan) {
             showToast('Please select a plan before submitting', 'error');
-            const pricingSection = document.getElementById('pricing');
-            if (pricingSection) {
-                pricingSection.scrollIntoView({ behavior: 'smooth' });
-            }
+            scrollToPricing();
             return;
         }
 
@@ -1505,7 +1507,7 @@ function initializeFormSubmission() {
         try {
             showToast('Submitting application...', 'info');
             
-            const response = await fetch('http://localhost:4000/api/applications/submit', {
+            const response = await fetch('http://54.157.97.158:4000/api/applications/submit', {
                 method: 'POST',
                 body: formData // Don't set Content-Type header - let browser set it with boundary
             });
@@ -1570,6 +1572,7 @@ window.addEventListener('load', function() {
         // Only reload if we still have fallback prices
         loadPackPrices();
     }
-});  </script>
+});
+    </script>
 </body>
 </html>

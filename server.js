@@ -6,7 +6,7 @@ const dotenv=require('dotenv')
 dotenv.config();
 // Enable CORS
 app.use(cors({
-    origin: ['https://www.planningearth.co.in', 'http://localhost:4000'],
+    origin: ['https://www.planningearth.co.in', '54.157.97.158:4000'],
     credentials: true
 }));
 app.get('/', (req, res) => {
