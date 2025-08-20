@@ -11,7 +11,7 @@ app.use(cors({
 }));
 app.get('/', (req, res) => {
     try {
-        res.sendFile(path.join(__dirname, 'index.html'));
+        res.send('Backend is wroking sucess');
     } catch (error) {
         console.error('Error serving index.html:', error);
         res.status(500).send('Error loading page');
