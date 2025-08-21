@@ -1,36 +1,62 @@
-version: "3.9"
+version: '3.8'
 
 services:
+  # --- Your Backend ---
   app:
-    build: .
-    container_name: nfc-node-app
+    build:
+      context: .          # Still build from project root
+      dockerfile: Dockerfile
+    container_name: backend
+    restart: always
     ports:
       - "4000:4000"
-    env_file: .env
+    environment:
+      - DB_HOST=mysql-db
+      - DB_USER=appuser
+      - DB_PASS=app_password
+      - DB_NAME=nfc_card_db
+      - DB_PORT=3306
     depends_on:
-      mysql:
-        condition: service_healthy
-    restart: always
+      - mysql-db
 
-  mysql:
+  # --- MySQL Database ---
+  mysql-db:
     image: mysql:8
     container_name: mysql-db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: taran@123
+      MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: nfc_card_db
       MYSQL_USER: appuser
       MYSQL_PASSWORD: app_password
-    ports:
-      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uappuser", "-papp_password"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
+
+  # --- Nginx Reverse Proxy ---
+  nginx:
+    image: nginx:latest
+    container_name: nginx-proxy
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app
+    restart: always
+
+  # --- Certbot for SSL Certificates ---
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./certbot/www:/var/www/certbot
+      - ./certbot/conf:/etc/letsencrypt
+    entrypoint: /bin/sh
+    command: -c "trap exit TERM; while :; do sleep 12h & wait $${!}; certbot renew --webroot -w /var/www/certbot; done"
 
 volumes:
   mysql_data:
+

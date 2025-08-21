@@ -1,0 +1,6 @@
+certbot/
+nginx.conf
+docker-compose.yml
+*.md
+*.log
+

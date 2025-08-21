@@ -6,12 +6,23 @@ const dotenv=require('dotenv')
 dotenv.config();
 // Enable CORS
 app.use(cors({
-    origin: ['https://www.planningearth.co.in', '54.157.97.158:4000'],
+    origin: (origin, callback) => {
+        const allowedOrigins = [
+            'https://www.planningearth.co.in',
+            'https://sharesampatti.com',
+            'http://localhost:4000'
+        ];
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }));
 app.get('/', (req, res) => {
     try {
-        res.send('Backend is wroking sucess');
+        res.sendFile(path.join(__dirname, 'index.html'));
     } catch (error) {
         console.error('Error serving index.html:', error);
         res.status(500).send('Error loading page');
