@@ -5,7 +5,7 @@ services:
     build: .
     container_name: nfc-node-app
     ports:
-      - "4000:4000"
+      - "4130:4130"
     env_file: .env
     depends_on:
       mysql:

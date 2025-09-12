@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart NFC Business Cards | PlanningEarth</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+   
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -20,6 +20,7 @@
             font-family: 'Poppins', sans-serif;
             color: #555;
             overflow-x: hidden;
+            min-height: 100%;
         }
         
         .gradient-bg {
@@ -298,6 +299,7 @@
     </style>
 </head>
 <body>
+
     <section class="py-8 sm:py-12 md:py-16 lg:py-24 bg-[#f8faff]">
         <div class="container mx-auto px-4 md:px-6">
             <div class="flex flex-col md:flex-row items-center">
@@ -836,7 +838,7 @@
     </section>
 
     <div id="toast-container"></div>
-
+ <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
 // Global variables for plan selection and file uploads
 let selectedPlan = null;
@@ -929,9 +931,9 @@ function updateHiddenPlanInputs(planName, price) {
 // FIXED: Load pack prices with better error handling
 async function loadPackPrices() {
     try {
-        console.log('Fetching pack prices from:', 'http://54.157.97.158:4000/api/applications/packs');
+        console.log('Fetching pack prices from:', 'http://localhost:4130/api/applications/packs');
         
-        const response = await fetch('http://54.157.97.158:4000/api/applications/packs', {
+        const response = await fetch('http://localhost:4130/api/applications/packs', {
             method: 'GET',
             headers: { 
                 'Content-Type': 'application/json'
@@ -1078,7 +1080,7 @@ function handleDocumentUpload(input) {
 
 function validateImage(file) {
     const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    const maxSize = 1 * 1024 * 1024; // 1MB
 
     if (!validTypes.includes(file.type)) {
         showToast('Please upload only JPG or PNG images', 'error');
@@ -1086,7 +1088,7 @@ function validateImage(file) {
     }
 
     if (file.size > maxSize) {
-        showToast('Image size should be less than 5MB', 'error');
+        showToast('Image size should be less than 1MB', 'error');
         return false;
     }
 
@@ -1102,7 +1104,7 @@ function validateDocument(file) {
         'image/png',
         'image/jpg'
     ];
-    const maxSize = 10 * 1024 * 1024; // 10MB
+    const maxSize = 2 * 1024 * 1024; // 2MB
 
     if (!validTypes.includes(file.type)) {
         showToast('Please upload only PDF, DOC, DOCX, JPG, or PNG files', 'error');
@@ -1110,7 +1112,7 @@ function validateDocument(file) {
     }
 
     if (file.size > maxSize) {
-        showToast('File size should be less than 10MB', 'error');
+        showToast('File size should be less than 2MB', 'error');
         return false;
     }
 
@@ -1239,7 +1241,7 @@ function showToast(message, type = 'info') {
                 toast.parentNode.removeChild(toast);
             }
         }, 300);
-    }, 3000);
+    }, 4130);
 }
 
 // Payment handling function
@@ -1247,7 +1249,7 @@ async function handlePayment(applicationId, fullName, email, phone) {
     try {
         showToast('Creating payment order...', 'info');
         
-        const orderResponse = await fetch('http://54.157.97.158:4000/api/payments/create-order', {
+        const orderResponse = await fetch('http://localhost:4130/api/payments/create-order', {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json' 
@@ -1280,7 +1282,7 @@ async function handlePayment(applicationId, fullName, email, phone) {
                 showToast('Verifying payment...', 'info');
                 
                 try {
-                    const verifyResponse = await fetch('http://54.157.97.158:4000/api/payments/verify-payment', {
+                    const verifyResponse = await fetch('http://localhost:4130/api/payments/verify-payment', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -1301,7 +1303,8 @@ async function handlePayment(applicationId, fullName, email, phone) {
                         const form = document.getElementById('nfc-application-form');
                         if (form) {
                             form.innerHTML = `
-                                <div class="text-center py-8">
+                            <div class="text-center py-8 min-h-full">
+
                                     <svg class="mx-auto h-16 w-16 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
@@ -1345,7 +1348,9 @@ async function handlePayment(applicationId, fullName, email, phone) {
             
             theme: {
                 color: "#1e88e5"
-            }
+            },   
+             escape: false,
+             backdropclose: false 
         };
 
         const rzp = new Razorpay(options);
@@ -1477,7 +1482,6 @@ function initializeFormSubmission() {
             document.querySelectorAll('input[type="checkbox"][id^="section-"]:checked')
         ).map(cb => cb.id.replace('section-', ''));
         formData.append('sectionsInclude', JSON.stringify(sectionsInclude));
-
         formData.append('servicesProducts', document.getElementById('services-products')?.value.trim() || '');
         formData.append('achievements', document.getElementById('achievements')?.value.trim() || '');
         formData.append('primaryCta', document.getElementById('primary-cta')?.value || 'contact');
@@ -1502,12 +1506,11 @@ function initializeFormSubmission() {
         }
 
         console.log('Submitting FormData with files...');
-
-        // Submit to backend with FormData
-        try {
-            showToast('Submitting application...', 'info');
+ 
+         
+        try {            showToast('Submitting application...', 'info');
             
-            const response = await fetch('http://54.157.97.158:4000/api/applications/submit', {
+            const response = await fetch('http://localhost:4130/api/applications/submit', {
                 method: 'POST',
                 body: formData // Don't set Content-Type header - let browser set it with boundary
             });
@@ -1528,7 +1531,7 @@ function initializeFormSubmission() {
                 </svg> Processing Payment...
             `;
 
-            // Proceed to payment
+            
             await handlePayment(
                 result.data.id,
                 document.getElementById('full-name').value.trim(),

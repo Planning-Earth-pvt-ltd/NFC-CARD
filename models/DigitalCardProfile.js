@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/DB');
-sequelize.sync({ alter: true })  // Automatically updates schema
+
   
 
 const DigitalCardProfile = sequelize.define('digital_card_profiles', {

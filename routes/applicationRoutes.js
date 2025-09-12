@@ -35,9 +35,9 @@ router.get('/packs', async (req, res) => {
   }
 });
 
-// Validate required fields
+// ✅ FIXED: Validate required fields (industry removed)
 function validateRequiredFields(data) {
-  const required = ['fullName', 'businessName', 'email', 'phone', 'industry'];
+  const required = ['fullName', 'businessName', 'email', 'phone'];
   const missing = required.filter(field => !data[field] || !data[field].toString().trim());
 
   if (missing.length > 0) {
@@ -67,8 +67,7 @@ function prepareApplicationData(formData, files = {}) {
 
   // FIXED: Determine correct price
   let finalPrice = formData.selectedPrice;
-  
-  // If price is missing or invalid, map from plan name
+
   if (!finalPrice || isNaN(parseFloat(finalPrice))) {
     finalPrice = PACK_PRICES[formData.selectedPlan] || PACK_PRICES['Starter Pack'];
     console.log('>>> MAPPED PRICE FROM PLAN:', finalPrice);
@@ -76,7 +75,6 @@ function prepareApplicationData(formData, files = {}) {
     finalPrice = parseFloat(finalPrice);
   }
 
-  // Validate plan exists
   const validPlans = Object.keys(PACK_PRICES);
   const selectedPlan = validPlans.includes(formData.selectedPlan) 
     ? formData.selectedPlan 
@@ -106,15 +104,15 @@ function prepareApplicationData(formData, files = {}) {
     primaryColor: formData.primaryColor || '#1e88e5',
     secondaryColor: formData.secondaryColor || '#69db7c',
     designPreference: formData.designPreference || 'modern',
-    industry: formData.industry,
+    industry: formData.industry || null, 
     sectionsInclude: Array.isArray(formData.sectionsInclude) ? formData.sectionsInclude : [],
     servicesProducts: formData.servicesProducts?.trim() || '',
     achievements: formData.achievements?.trim() || '',
     primaryCta: formData.primaryCta || 'contact',
     customCta: formData.customCta?.trim() || '',
     downloadTitle: formData.downloadTitle?.trim() || '',
-    selectedPlan: selectedPlan, // FIXED: Use validated plan
-    price: finalPrice, // FIXED: Use calculated price
+    selectedPlan: selectedPlan,
+    price: finalPrice,
     termsConsent: Boolean(formData.termsConsent),
     additionalNotes: formData.additionalNotes?.trim() || '',
     applicationDate: new Date(),
@@ -127,81 +125,84 @@ function prepareApplicationData(formData, files = {}) {
   };
 }
 
-// FIXED: Submit application with proper file handling and logging
-router.post('/submit',
-upload.fields([
-  { name: 'image', maxCount: 1 },
-  { name: 'document', maxCount: 1 }
-]), async (req, res) => {
-  console.log('>>> RECEIVED BODY:', JSON.stringify(req.body, null, 2)); 
-  console.log('>>> RECEIVED FILES:', req.files);
-  
-  try {
-    const formData = req.body;
-    const validation = validateRequiredFields(formData);
+// FIXED: Submit application
+router.post(
+  '/submit',
+  upload.fields([
+    { name: 'image', maxCount: 1 },
+    { name: 'document', maxCount: 1 }
+  ]),
+  async (req, res) => {
+    console.log('>>> RECEIVED BODY:', JSON.stringify(req.body, null, 2));
+    console.log('>>> RECEIVED FILES:', req.files);
 
-    if (!validation.isValid) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'Validation failed', 
-        details: validation.errors 
+    try {
+      const formData = req.body;
+      const validation = validateRequiredFields(formData);
+
+      if (!validation.isValid) {
+        return res.status(400).json({
+          success: false,
+          error: 'Validation failed',
+          details: validation.errors
+        });
+      }
+
+      const profileData = prepareApplicationData(formData, req.files);
+
+      console.log('>>> SAVING TO DB:', {
+        selectedPlan: profileData.selectedPlan,
+        price: profileData.price,
+        fullName: profileData.fullName,
+        email: profileData.email
+      });
+
+      const savedApp = await Application.create(profileData);
+
+      console.log('>>> SAVED APPLICATION:', {
+        id: savedApp.id,
+        price: savedApp.price,
+        selectedPlan: savedApp.selectedPlan
+      });
+
+      // Send emails async
+      Promise.allSettled([
+        sendApplicationEmail(savedApp),
+        sendConfirmationEmail(savedApp)
+      ]).then(([adminRes, userRes]) => {
+        if (adminRes.status !== 'fulfilled') {
+          console.error('Admin email failed:', adminRes.reason || adminRes.value?.error);
+        }
+        if (userRes.status !== 'fulfilled') {
+          console.error('User email failed:', userRes.reason || userRes.value?.error);
+        }
+      });
+
+      res.status(201).json({
+        success: true,
+        message: 'Application submitted successfully',
+        data: {
+          id: savedApp.id,
+          fullName: savedApp.fullName,
+          businessName: savedApp.businessName,
+          selectedPlan: savedApp.selectedPlan,
+          price: savedApp.price,
+          applicationDate: savedApp.applicationDate,
+          status: savedApp.status,
+          email: savedApp.email,
+          phone: savedApp.phone
+        }
+      });
+    } catch (error) {
+      console.error('>>> ERROR SUBMITTING APPLICATION:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Server error',
+        message: error.message
       });
     }
-
-    const profileData = prepareApplicationData(formData, req.files);
-    
-    console.log('>>> SAVING TO DB:', {
-      selectedPlan: profileData.selectedPlan,
-      price: profileData.price,
-      fullName: profileData.fullName,
-      email: profileData.email
-    });
-
-    const savedApp = await Application.create(profileData);
-    
-    console.log('>>> SAVED APPLICATION:', {
-      id: savedApp.id,
-      price: savedApp.price,
-      selectedPlan: savedApp.selectedPlan
-    });
-
-    // Send emails in background
-    Promise.allSettled([
-      sendApplicationEmail(savedApp),
-      sendConfirmationEmail(savedApp)
-    ]).then(([adminRes, userRes]) => {
-      if (adminRes.status !== 'fulfilled') {
-        console.error('Admin email failed:', adminRes.reason || adminRes.value?.error);
-      }
-      if (userRes.status !== 'fulfilled') {
-        console.error('User email failed:', userRes.reason || userRes.value?.error);
-      }
-    });
-
-    res.status(201).json({
-      success: true,
-      message: 'Application submitted successfully',
-      data: {
-        id: savedApp.id,
-        fullName: savedApp.fullName,
-        businessName: savedApp.businessName,
-        selectedPlan: savedApp.selectedPlan,
-        price: savedApp.price, // FIXED: Return the actual price
-        applicationDate: savedApp.applicationDate,
-        status: savedApp.status,
-        email: savedApp.email,
-        phone: savedApp.phone
-      }
-    });
-  } catch (error) {
-    console.error('>>> ERROR SUBMITTING APPLICATION:', error);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Server error', 
-      message: error.message 
-    });
   }
-});
+);
 
 // GET /api/applications
 router.get('/', async (req, res) => {

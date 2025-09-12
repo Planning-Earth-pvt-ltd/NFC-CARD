@@ -6,7 +6,18 @@ const dotenv=require('dotenv')
 dotenv.config();
 // Enable CORS
 app.use(cors({
-    origin: ['https://www.planningearth.co.in', '54.157.97.158:4000'],
+    origin: (origin, callback) => {
+        const allowedOrigins = [
+            'https://www.planningearth.co.in',
+            'https://sharesampatti.com',
+            'http://80.65.208.109:4130'
+        ];
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }));
 app.get('/', (req, res) => {
@@ -30,7 +41,7 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api',price);
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4130;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
