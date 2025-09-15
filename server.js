@@ -10,7 +10,7 @@ app.use(cors({
         const allowedOrigins = [
             'https://www.planningearth.co.in',
             'https://sharesampatti.com',
-            'http://80.65.208.109:4130'
+            'http://localhost:4130'
         ];
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);

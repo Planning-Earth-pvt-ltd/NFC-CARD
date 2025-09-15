@@ -1,7 +1,7 @@
 const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize('nfc_cards', 'root', 'Root@123', {
-  host: '80.65.208.109',
+  host: 'localhost',
   dialect: 'mysql',
 
   dialectOptions: {

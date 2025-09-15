@@ -931,9 +931,9 @@ function updateHiddenPlanInputs(planName, price) {
 // FIXED: Load pack prices with better error handling
 async function loadPackPrices() {
     try {
-        console.log('Fetching pack prices from:', 'http://80.65.208.109:4130/api/applications/packs');
+        console.log('Fetching pack prices from:', 'http://localhost:4130/api/applications/packs');
         
-        const response = await fetch('http://80.65.208.109:4130/api/applications/packs', {
+        const response = await fetch('http://localhost:4130/api/applications/packs', {
             method: 'GET',
             headers: { 
                 'Content-Type': 'application/json'
@@ -1249,7 +1249,7 @@ async function handlePayment(applicationId, fullName, email, phone) {
     try {
         showToast('Creating payment order...', 'info');
         
-        const orderResponse = await fetch('http://80.65.208.109:4130/api/payments/create-order', {
+        const orderResponse = await fetch('http://localhost:4130/api/payments/create-order', {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json' 
@@ -1282,7 +1282,7 @@ async function handlePayment(applicationId, fullName, email, phone) {
                 showToast('Verifying payment...', 'info');
                 
                 try {
-                    const verifyResponse = await fetch('http://80.65.208.109:4130/api/payments/verify-payment', {
+                    const verifyResponse = await fetch('http://localhost:4130/api/payments/verify-payment', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -1462,7 +1462,9 @@ function initializeFormSubmission() {
         formData.append('address', document.getElementById('address')?.value.trim() || '');
         formData.append('email', document.getElementById('email').value.trim().toLowerCase());
         formData.append('phone', document.getElementById('phone').value.trim());
-        formData.append('whatsappEnabled', document.getElementById('whatsapp-enabled')?.checked || false);
+        formData.append('whatsappEnabled', document.getElementById('whatsapp-enabled')?.checked ? "true" : "false");
+        formData.append('termsConsent', document.getElementById('terms-consent')?.checked ? "true" : "false");
+
         formData.append('altPhone', document.getElementById('alt-phone')?.value.trim() || '');
         formData.append('website', document.getElementById('website')?.value.trim() || '');
         formData.append('linkedin', document.getElementById('linkedin')?.value.trim() || '');
@@ -1487,7 +1489,7 @@ function initializeFormSubmission() {
         formData.append('primaryCta', document.getElementById('primary-cta')?.value || 'contact');
         formData.append('customCta', document.getElementById('custom-cta')?.value.trim() || '');
         formData.append('downloadTitle', document.getElementById('download-title')?.value.trim() || '');
-        formData.append('termsConsent', document.getElementById('terms-consent')?.checked || false);
+        
         formData.append('additionalNotes', document.getElementById('additional-notes')?.value.trim() || '');
         formData.append('razorpayOrderId', '');
         formData.append('razorpayPaymentId', '');
@@ -1510,9 +1512,9 @@ function initializeFormSubmission() {
          
         try {            showToast('Submitting application...', 'info');
             
-            const response = await fetch('http://80.65.208.109:4130/api/applications/submit', {
+            const response = await fetch('http://localhost:4130/api/applications/submit', {
                 method: 'POST',
-                body: formData // Don't set Content-Type header - let browser set it with boundary
+                body: formData 
             });
 
             const result = await response.json();

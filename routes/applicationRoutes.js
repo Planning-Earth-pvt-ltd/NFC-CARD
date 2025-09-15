@@ -35,7 +35,6 @@ router.get('/packs', async (req, res) => {
   }
 });
 
-// ✅ FIXED: Validate required fields (industry removed)
 function validateRequiredFields(data) {
   const required = ['fullName', 'businessName', 'email', 'phone'];
   const missing = required.filter(field => !data[field] || !data[field].toString().trim());
