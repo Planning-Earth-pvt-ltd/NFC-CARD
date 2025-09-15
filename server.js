@@ -9,8 +9,8 @@ app.use(cors({
     origin: (origin, callback) => {
         const allowedOrigins = [
             'https://www.planningearth.co.in',
-            'https://sharesampatti.com',
-            'http://localhost:4130'
+            'https://nfc.planningearth.co.in',
+            'http://80.65.208.109:4130'
         ];
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
