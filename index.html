@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart NFC Business Cards | PlanningEarth</title>
     <script src="https://cdn.tailwindcss.com"></script>
-   
-
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-picker@2.11.0/dist/vanilla-picker.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vanilla-picker@2.11.0/dist/vanilla-picker.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -664,20 +664,21 @@
                     <div class="mb-3 sm:mb-4 md:mb-6">
                         <label class="block text-gray-700 mb-1 text-sm md:text-base">Brand Colors</label>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
-                            <div>
-                                <label class="block text-gray-600 text-xs sm:text-sm mb-1">Primary Color</label>
-                                <div class="flex items-center">
-                                    <input type="color" id="primary-color" class="h-8 w-8 sm:h-10 sm:w-10 rounded border border-gray-300 mr-2" value="#1e88e5">
-                                    <input type="text" id="primary-color-hex" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" placeholder="#1e88e5" value="#1e88e5">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-gray-600 text-xs sm:text-sm mb-1">Secondary Color</label>
-                                <div class="flex items-center">
-                                    <input type="color" id="secondary-color" class="h-8 w-8 sm:h-10 sm:w-10 rounded border border-gray-300 mr-2" value="#69db7c">
-                                    <input type="text" id="secondary-color-hex" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" placeholder="#69db7c" value="#69db7c">
-                                </div>
-                            </div>
+                           <div>
+    <label class="block text-gray-600 text-xs sm:text-sm mb-1">Primary Color</label>
+    <div class="flex items-center">
+        <button type="button" id="primary-color-btn" class="h-8 w-8 sm:h-10 sm:w-10 rounded border border-gray-300 mr-2" style="background-color: #1e88e5;"></button>
+        <input type="text" id="primary-color-hex" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" placeholder="#1e88e5" value="#1e88e5">
+    </div>
+</div>
+
+<div>
+    <label class="block text-gray-600 text-xs sm:text-sm mb-1">Secondary Color</label>
+    <div class="flex items-center">
+        <button type="button" id="secondary-color-btn" class="h-8 w-8 sm:h-10 sm:w-10 rounded border border-gray-300 mr-2" style="background-color: #69db7c;"></button>
+        <input type="text" id="secondary-color-hex" class="form-input w-full px-3 py-2 sm:py-2.5 md:py-3 rounded-lg border border-gray-300 focus:outline-none text-sm md:text-base" placeholder="#69db7c" value="#69db7c">
+    </div>
+</div>
                         </div>
                     </div>
                     
@@ -1002,42 +1003,64 @@ function updateButtonHandlers() {
     }
 }
 
-// Color picker synchronization
 function initializeColorPickers() {
-    const primaryColor = document.getElementById('primary-color');
+    // Primary Color
+    const primaryColorBtn = document.getElementById('primary-color-btn');
     const primaryColorHex = document.getElementById('primary-color-hex');
-    const secondaryColor = document.getElementById('secondary-color');
+    
+    // Secondary Color
+    const secondaryColorBtn = document.getElementById('secondary-color-btn');
     const secondaryColorHex = document.getElementById('secondary-color-hex');
 
-    if (primaryColor && primaryColorHex) {
-        primaryColor.addEventListener('change', function() {
-            primaryColorHex.value = this.value;
+    // Create a new Picker for the Primary Color button
+    if (primaryColorBtn && primaryColorHex) {
+        new Picker({
+            parent: primaryColorBtn,
+            color: primaryColorHex.value,
+            onDone: function(color) {
+                // When a color is selected, update the hex input and the button's background
+                primaryColorHex.value = color.hex;
+                primaryColorBtn.style.backgroundColor = color.hex;
+            }
         });
 
+        // Add event listener to sync the text input to the button's color
         primaryColorHex.addEventListener('input', function() {
             if (isValidHex(this.value)) {
-                primaryColor.value = this.value;
+                primaryColorBtn.style.backgroundColor = this.value;
             }
         });
     }
 
-    if (secondaryColor && secondaryColorHex) {
-        secondaryColor.addEventListener('change', function() {
-            secondaryColorHex.value = this.value;
+    // Create a new Picker for the Secondary Color button
+    if (secondaryColorBtn && secondaryColorHex) {
+        new Picker({
+            parent: secondaryColorBtn,
+            color: secondaryColorHex.value,
+            onDone: function(color) {
+                // When a color is selected, update the hex input and the button's background
+                secondaryColorHex.value = color.hex;
+                secondaryColorBtn.style.backgroundColor = color.hex;
+            }
         });
 
+        // Add event listener to sync the text input to the button's color
         secondaryColorHex.addEventListener('input', function() {
             if (isValidHex(this.value)) {
-                secondaryColor.value = this.value;
+                secondaryColorBtn.style.backgroundColor = this.value;
             }
         });
     }
 }
 
+// Keep your isValidHex function as it is
 function isValidHex(hex) {
     return /^#([0-9A-F]{3}){1,2}$/i.test(hex);
 }
 
+// Make sure you call initializeColorPickers() when the page loads
+// (This should already be in your DOMContentLoaded listener)
+document.addEventListener('DOMContentLoaded', initializeColorPickers);
 // CTA selection handling
 function initializeCTAHandling() {
     const primaryCta = document.getElementById('primary-cta');
